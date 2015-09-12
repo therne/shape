@@ -1,0 +1,236 @@
+
+{
+  parserClass="com.shape.idea.parser.ShapeParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Shape"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.shape.idea.psi"
+  psiImplPackage="com.shape.idea.psi.impl"
+  parserUtilClass="com.shape.idea.parser.ShapeParsingUtil"
+
+  elementTypeHolderClass="com.shape.idea.psi.ShapeTypes"
+  elementTypeClass="com.shape.idea.psi.ShapeElementType"
+  tokenTypeClass="com.shape.idea.psi.ShapeTokenType"
+
+  tokens=[
+      LBRACE               =  '{'
+      RBRACE               =  '}'
+      LBRACK               =  '['
+      RBRACK               =  ']'
+      LPAREN               =  '('
+      RPAREN               =  ')'
+      COLON                =  ':'
+      SEMICOLON            =  ';'
+      COMMA                =  ','
+      EQ                   =  '=='
+      ASSIGN               =  '='
+      NOT_EQ               =  '!='
+      NOT                  =  '!'
+      PLUS_PLUS            =  '++'
+      PLUS_ASSIGN          =  '+='
+      PLUS                 =  '+'
+      MINUS_MINUS          =  '--'
+      MINUS_ASSIGN         =  '-='
+      QUESTION_MARK        =  '?'
+      ID_SIGN              =  '#'
+      MINUS                =  '-'
+      COND_OR              =  '||'
+      BIT_OR_ASSIGN        =  '|='
+      BIT_CLEAR_ASSIGN     =  '&^='
+      BIT_CLEAR            =  '&^'
+      COND_AND             =  '&&'
+      BIT_AND_ASSIGN       =  '&='
+      BIT_AND              =  '&'
+      BIT_OR               =  '|'
+      SHIFT_LEFT_ASSIGN    =  '<<='
+      SHIFT_LEFT           =  '<<'
+      LTE                  =  '<='
+      LT                   =  '<'
+      BIT_XOR_ASSIGN       =  '^='
+      BIT_XOR              =  '^'
+      MUL_ASSIGN           =  '*='
+      MUL                  =  '*'
+      QUOTIENT_ASSIGN      =  '/='
+      QUOTIENT             =  '/'
+      MOD_ASSIGN           =  '%='
+      MOD                  =  '%'
+      SHIFT_RIGHT_ASSIGN   =  '>>='
+      SHIFT_RIGHT          =  '>>'
+      GTE                  =  '>='
+      GT                   =  '>'
+      NOTNULL              =  '??'
+      TRIPLE_DOT           =  '...'
+      DOT                  =  '.'
+      AT                   =  '@'
+//      IDENTIFIER           ='regexp:\p{Alpha}\w*'
+//      SEMICOLON_SYNTHETIC  =  'regexp:(\r\n|\n\r|\n)'
+      SEMICOLON_SYNTHETIC  = '<newline>'
+    ]
+
+      extends(".*View")=View
+}
+
+File ::= TopLevelStatements* {pin(".*")=1}
+
+// Virtual semicolon : Newline or semicolon (to write multiple lines into one line)
+private semi ::= '<newline>' | ';' | <<eof>>
+
+// Useful meta-rules
+private meta CommaListOf ::= <<param>> { ',' <<param>> }* ','?
+private meta SemicolonListOf ::= <<param>> { semi <<param>> }* semi?
+
+TopLevelStatements ::= OneOfStatements semi { pin=1 recoverWhile=TopLevelStatementsRecover}
+private OneOfStatements ::=
+    ImportStatement
+  | UseStatement
+  | StyleStatement
+  | RootView
+
+private TopLevelStatementsRecover ::= !( import | ';' | use | style | identifier )
+
+ImportStatement ::= import static? ClassName ['.' '*'] { pin=1 }
+PackageName ::= identifier {'.' identifier}* { pin=1 }
+ClassName ::= PackageName
+
+UseStatement ::= use (VariableDeclaration | UseBlock)  {pin(".*")=1}
+UseBlock ::= '{' ('}' | VariableDeclarations  '}')
+
+// Resources
+ResourceReference ::= '@' identifier '/' identifier
+Dimension ::= (integer | floati) (dp | sp | px | '%')
+AttrValue ::= Dimension | ResourceReference | str | integer | floati | identifier
+
+// Styles
+StyleStatement ::= style identifier ['(' Selector ')'] AttributeBlock
+Selector ::= '*' /* NOT IMPLEMENTED NOW */
+
+AttributeBlock ::= '{' ('}' | Attributes '}')
+private Attributes ::= <<SemicolonListOf Attribute>> { pin=1 recoverWhile=AttrRecover }
+private AttrRecover ::= !('}')
+
+Attribute ::= StateAttribute | AttributePair
+AttributePair ::= AttrKey [':' AttrValue] { pin=1 }
+StateAttribute ::= AttrKey
+AttrKey ::= identifier
+
+// Views
+View ::= ViewName {StyleReference | IdDefinition }* ViewAttributeBlock ViewBlock? { pin=1 }
+RootView ::= ViewName {StyleReference | IdDefinition }* ViewAttributeBlock ViewBlock? { pin=3 } // different pin
+private attrDelimiter ::= ',' | '<NL>'
+ViewName ::= ClassName
+
+
+ViewAttributeBlock ::= '(' AttributePair { attrDelimiter (AttributePair | &')')}* ')' { pin(".*")=1 }
+//ViewBlock ::= <<consumeBlock>> | '{' ('}' | (<<withOff Views "BLOCK?" "PAR">> | (!() Views)) '}') {pin(".*")=1 }
+ViewBlock ::= '{' ('}' |  Views '}') { pin(".*")=1 }
+private Views ::= <<SemicolonListOf View>> { pin=1 recoverWhile=ViewRecover }
+ViewRecover ::= !('}' | ClassName)
+
+StyleReference ::= '.' identifier
+IdDefinition ::= '#' identifier
+
+// Statements
+Statement ::=
+    StatementBlock
+  | IfStatement
+  | DoStatement
+  | WhileStatement
+  | ForStatement
+  | TryStatement
+  | SwitchStatement
+  | ReturnStatement
+  | BreakStatement
+  | ContinueStatement
+  | AssignStatement
+
+StatementBlock ::= <<consumeBlock>> | '{' ('}' | (<<withOff Statements "BLOCK?" "PAR">> | (!() Statements)) '}') {pin(".*")=1}
+private Statements ::= StatementWithSemi*
+private StatementWithSemi ::= Statement (semi|&'}') { pin=1 recoverWhile=StatementRecover }
+private StatementRecover ::= !(identifier | '!' | '!=' | '%' | '%=' | '&&' | '&' | '&=' | '&^' | '&^=' | '(' | '*' | '*='
+    | '+' | '++' | '+=' | '-' | '--' | '-=' | '.' | '/' | '/=' | ':' | ';' | '<' | '<<' | '<<=' | '<=' | '=' | '==' | '>'
+    | '>=' | '>>' | '>>=' | '[' | '^' | '^=' | '{' | '|' | '|=' | '||' | '}' | "??" | null | true | false | boolean
+    | break | byte | case | char | continue | do | double | default | else | finally | float | for
+    | import | if | instanceof |  int | long | new | style | short | switch | return | while
+    | integer | hex | oct | decimali | floati | str )
+
+IfStatement ::= if '(' Expression ')' Statement [ else Statement ]
+DoStatement ::= do Statement while '(' Expression ')'
+WhileStatement ::= while '(' Expression ')' Statement
+ForStatement ::= for '(' [VariableDeclaration | Expression] ';'
+    Expression? ';'
+    Expression? ')' Statement
+TryStatement ::= try Statement { catch '(' Parameters ')' Statement }* [finally Statement]
+SwitchStatement ::= switch '(' Expression ')' '{'
+    { case Expression ':' Statement }*
+    [ default Expression ':' Statement ]
+    '}'
+ReturnStatement ::= return Expression
+BreakStatement ::= break
+ContinueStatement ::= continue
+AssignStatement ::= VariableName '=' Expression { pin=2 rightAssociative=true }
+
+private Parameters ::= <<CommaListOf Parameter>> { pin=1 }
+Parameter ::= TypeSpecifier VariableName
+VariableName ::= identifier
+
+Expression ::=
+    NumericExpr
+//  | ConditionalExpr
+  | LogicalExpr
+//  | BitExpr
+  | TypeCastingExpr
+//  | CreatingExpr
+//  | LiteralExpr
+  | null
+  | super
+  | this
+  | identifier
+  | new // TODO: 하세여
+  | SingleExpr (
+      ('[' Expression ']')
+    | ('.' Expression)
+    | (',' Expression)
+    | (instanceof ClassName)
+  )
+
+SingleExpr ::=
+    '(' NumericExpr ')'
+    | TypeCastingExpr
+    | identifier
+
+NumericExpr ::=
+    PrefixOperator
+  | PostfixOperator
+  | NormalExpr
+
+LogicalExpr ::=
+    ('!' Expression)
+  | ( SingleExpr "?" Expression ":" Expression )
+  | ( SingleExpr "??" Expression )
+  | true
+  | false
+
+TypeCastingExpr ::= '(' TypeSpecifier ')' Expression
+
+PrefixOperator ::= (('++'|'--'|'-') Expression)
+PostfixOperator ::= SingleExpr('++'|'--')
+NormalExpr ::= SingleExpr ('+'|'+='|'-'|'-='|'*'|'*='|'/'|'/='|'%'|'%=') SingleExpr
+//ConditionalExpr ::= ConditionalExpr ('+'|'+='|'-'|'-='|'*'|'*='|'/'|'/='|'%'|'%=') ConditionalExpr
+
+private VariableDeclarations ::= <<SemicolonListOf VariableDeclaration>> { pin=1 }
+VariableDeclaration ::= Type <<CommaListOf SingleVarDeclaration>>
+private SingleVarDeclaration ::= (AssignStatement | VariableName)
+Type ::= TypeSpecifier [ '[' ']' | '<' Type '>' ]
+
+TypeSpecifier ::=
+    boolean
+  | byte
+  | char
+  | short
+  | int
+  | float
+  | long
+  | double
+  | ClassName
