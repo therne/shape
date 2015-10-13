@@ -43,9 +43,6 @@ public abstract class ShapeSyntaxColors  {
         registerColor(NUMBERS, "NUMBER", DefaultLanguageHighlighterColors.NUMBER);
         registerColor(KEYWORDS, "KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
         registerColor(OPERATORS, "OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
-
-        registerColor(VIEW_NAME, "VIEW_NAME", DefaultLanguageHighlighterColors.MARKUP_TAG);
-        registerColor(ATTR_VALUE, "ATTR_VALUE", DefaultLanguageHighlighterColors.STRING);
     }
 
     public static void registerColor(IElementType type, String name, TextAttributesKey value) {

@@ -31,6 +31,7 @@
     <completion.contributor language="Shape" implementationClass="com.shape.idea.completion.ShapeCompletionContributor" />
     <lang.commenter language="Shape" implementationClass="com.shape.idea.editor.ShapeCommenter" />
     <lang.braceMatcher language="Shape" implementationClass="com.shape.idea.editor.ShapeBraceMatcher" />
+    <annotator language="Shape" implementationClass="com.shape.idea.highlighting.ShapeSyntaxAnnotator" />
   </extensions>
 
   <application-components>

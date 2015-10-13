@@ -39,7 +39,7 @@ public class ShapeParserDefinition implements com.intellij.lang.ParserDefinition
     public static final TokenSet OPERATORS = TokenSet.create(QUESTION_MARK,
             EQ, ASSIGN, NOT_EQ, NOT, PLUS_PLUS, PLUS_ASSIGN, PLUS, MINUS_MINUS, MINUS_ASSIGN, MINUS,
             COND_OR, BIT_OR_ASSIGN, BIT_CLEAR, BIT_CLEAR_ASSIGN, COND_AND, BIT_AND, BIT_AND_ASSIGN,
-            SHIFT_LEFT, SHIFT_LEFT_ASSIGN, SHIFT_RIGHT, SHIFT_RIGHT_ASSIGN, LTE, LT, GTE, GT,
+            SHIFT_LEFT, SHIFT_LEFT_ASSIGN, SHIFT_RIGHT, SHIFT_RIGHT_ASSIGN, LTE, LT, GTE, GT, COLON,
             BIT_XOR, BIT_XOR_ASSIGN, MUL, MUL_ASSIGN, QUOTIENT, QUOTIENT_ASSIGN, MOD, MOD_ASSIGN, ID_SIGN, NOTNULL);
  
     public static final IFileElementType FILE = new IFileElementType(Language.findInstance(ShapeLanguage.class));
