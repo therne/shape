@@ -653,14 +653,13 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '#' identifier
+  // view_id_name
   public static boolean IdDefinition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "IdDefinition")) return false;
-    if (!nextTokenIs(b, ID_SIGN)) return false;
+    if (!nextTokenIs(b, VIEW_ID_NAME)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, ID_SIGN);
-    r = r && consumeToken(b, IDENTIFIER);
+    r = consumeToken(b, VIEW_ID_NAME);
     exit_section_(b, m, ID_DEFINITION, r);
     return r;
   }
@@ -1417,14 +1416,13 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '.' identifier
+  // dot_head_name
   public static boolean StyleReference(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "StyleReference")) return false;
-    if (!nextTokenIs(b, DOT)) return false;
+    if (!nextTokenIs(b, DOT_HEAD_NAME)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, DOT);
-    r = r && consumeToken(b, IDENTIFIER);
+    r = consumeToken(b, DOT_HEAD_NAME);
     exit_section_(b, m, STYLE_REFERENCE, r);
     return r;
   }

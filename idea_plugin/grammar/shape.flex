@@ -32,6 +32,9 @@ OCT_DIGIT = [0-7]
 
 IDENT = {LETTER} ({LETTER} | {DIGIT} )*
 
+_DOT_HEAD_NAME = "." {IDENT}
+_VIEW_ID_NAME = "#" {IDENT}
+
 NUM_INT = "0" | ([1-9] {INT_DIGIT}*)
 NUM_HEX = ("0x" | "0X") {HEX_DIGIT}+
 NUM_OCT = "0" {OCT_DIGIT}+
@@ -158,6 +161,9 @@ ESCAPES = [abfnrtv]
     "@"                                      { return AT; }
 
     {IDENT}                                  {  yybegin(MAYBE_SEMICOLON); return IDENTIFIER; }
+
+    {_DOT_HEAD_NAME}                            {  yybegin(MAYBE_SEMICOLON); return DOT_HEAD_NAME; }
+    {_VIEW_ID_NAME}                          {  yybegin(MAYBE_SEMICOLON); return VIEW_ID_NAME; }
 
     {NUM_FLOAT}                              {  yybegin(MAYBE_SEMICOLON); return FLOATI; }
     {DIGIT}+"i"                              {  yybegin(MAYBE_SEMICOLON); return DECIMALI; }

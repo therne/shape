@@ -91,7 +91,7 @@ private OneOfStatements ::=
 private TopLevelStatementsRecover ::= !( import | ';' | use | style | identifier )
 
 ImportStatement ::= import static? ClassName ['.' '*'] { pin=1 }
-PackageName ::= identifier {'.' identifier}* { pin=1 }
+PackageName ::= identifier dot_head_name* { pin=1 }
 ClassName ::= PackageName
 
 UseStatement ::= use (VariableDeclaration | UseBlock)  {pin(".*")=1}
@@ -128,8 +128,8 @@ ViewBlock ::= '{' ('}' |  Views '}') { pin(".*")=1 }
 private Views ::= <<SemicolonListOf View>> { pin=1 recoverWhile=ViewRecover }
 ViewRecover ::= !('}' | ClassName)
 
-StyleReference ::= '.' identifier
-IdDefinition ::= '#' identifier
+StyleReference ::= dot_head_name
+IdDefinition ::= view_id_name
 
 // Statements
 Statement ::=

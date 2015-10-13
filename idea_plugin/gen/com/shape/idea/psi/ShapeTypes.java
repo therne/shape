@@ -83,6 +83,7 @@ public interface ShapeTypes {
   IElementType DEFAULT = new ShapeTokenType("default");
   IElementType DO = new ShapeTokenType("do");
   IElementType DOT = new ShapeTokenType(".");
+  IElementType DOT_HEAD_NAME = new ShapeTokenType("dot_head_name");
   IElementType DOUBLE = new ShapeTokenType("double");
   IElementType DP = new ShapeTokenType("dp");
   IElementType ELSE = new ShapeTokenType("else");
@@ -150,6 +151,7 @@ public interface ShapeTypes {
   IElementType TRUE = new ShapeTokenType("true");
   IElementType TRY = new ShapeTokenType("try");
   IElementType USE = new ShapeTokenType("use");
+  IElementType VIEW_ID_NAME = new ShapeTokenType("view_id_name");
   IElementType WHILE = new ShapeTokenType("while");
 
   class Factory {
