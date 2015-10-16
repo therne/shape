@@ -2,7 +2,7 @@ package com.shape.error;
 
 import com.shape.lexer.Token;
 
-public class SyntaxError extends LessError {
+public class SyntaxError extends ShapeError {
     int codeLineNo, codeColNo;
 
     public SyntaxError(String message, int lineNo, int colNo) {

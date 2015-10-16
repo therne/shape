@@ -1,6 +1,6 @@
 package com.shape;
 
-import com.shape.error.LessError;
+import com.shape.error.ShapeError;
 import com.shape.error.SyntaxError;
 
 import java.io.File;
@@ -27,7 +27,7 @@ public class Log {
         System.err.printf(message);
     }
 
-    public static void error(LessError error) {
+    public static void error(ShapeError error) {
         if (error instanceof SyntaxError) syntaxError((SyntaxError) error);
         else System.err.printf("%s: %s\n", sourceFilePath, error.getMessage());
     }

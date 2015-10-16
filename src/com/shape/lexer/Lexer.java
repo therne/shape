@@ -1,6 +1,6 @@
 package com.shape.lexer;
 
-import com.shape.error.LessError;
+import com.shape.error.ShapeError;
 import com.shape.error.SyntaxError;
 import com.shape.dictionary.Operator;
 import com.shape.dictionary.TokenType;
@@ -35,7 +35,7 @@ public class Lexer {
      *
      * @return tokenized code
      */
-    public TokenStream perform() throws LessError {
+    public TokenStream perform() throws ShapeError {
 
         try {
             BufferedReader reader = new BufferedReader(document != null ?
@@ -53,10 +53,10 @@ public class Lexer {
             }
 
         } catch (FileNotFoundException e) {
-            throw new LessError("File not found.");
+            throw new ShapeError("File not found.");
 
         } catch (IOException e) {
-            throw new LessError("An error occured during reading file. (%s)", e.getMessage());
+            throw new ShapeError("An error occured during reading file. (%s)", e.getMessage());
         }
         return code;
     }
@@ -64,7 +64,7 @@ public class Lexer {
     /**
      * Do analyze.
      */
-    private void analyze(String line) throws LessError {
+    private void analyze(String line) throws ShapeError {
         line += '\n';
 
         // increase line num

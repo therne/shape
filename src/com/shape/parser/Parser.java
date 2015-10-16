@@ -6,7 +6,7 @@ import com.shape.ast.nodes.Node;
 import com.shape.ast.nodes.View;
 import com.shape.ast.styles.Style;
 import com.shape.dictionary.TokenType;
-import com.shape.error.LessError;
+import com.shape.error.ShapeError;
 import com.shape.error.SyntaxError;
 import com.shape.error.UnexpectedTokenError;
 import com.shape.lexer.Token;
@@ -26,7 +26,7 @@ public class Parser extends BaseParser {
     private Style parsingStyle;
 
     @Override
-    protected void expect() throws LessError {
+    protected void expect() throws ShapeError {
         switch (currToken.getType()) {
             case IMPORT: handleImport(); break;
             case INCLUDE: handleInclude(); break;
@@ -40,7 +40,7 @@ public class Parser extends BaseParser {
     }
 
     @Override
-    protected void expectationMatched() throws LessError {
+    protected void expectationMatched() throws ShapeError {
         switch (currentState) {
             case VIEW:
                 if (currToken.getType() == NAME) {
@@ -145,7 +145,7 @@ public class Parser extends BaseParser {
         expectNext(NAME, LBRACE, RBRACE);
     }
 
-    void handleImport() throws LessError {
+    void handleImport() throws ShapeError {
         // import must be top of the layer. not in the View block.
         if (!nodeStack.isEmpty()) throw new SyntaxError("import must be top", currToken);
 
@@ -155,25 +155,25 @@ public class Parser extends BaseParser {
         // TODO: IMPORT!
     }
 
-    void handleInclude() throws LessError {
+    void handleInclude() throws ShapeError {
         // include must be in the view or layout block.
         if (nodeStack.isEmpty()) throw new SyntaxError("'include' must be in the View or Layout.", currToken);
 
         // TODO: INCLUDE!
     }
 
-    void useBlock() throws LessError {
+    void useBlock() throws ShapeError {
         Token next = expectAndPull(NAME, LBRACE);
         if (next.getType() == NAME) {
 
         }
     }
 
-    void useBlockField() throws LessError {
+    void useBlockField() throws ShapeError {
 
     }
 
-    void styleBegin() throws LessError {
+    void styleBegin() throws ShapeError {
         //TODO: 범위한정
 
         // get name
@@ -198,7 +198,7 @@ public class Parser extends BaseParser {
     }
 
 
-    void handleAttribute(boolean isStyle) throws LessError {
+    void handleAttribute(boolean isStyle) throws ShapeError {
         String attrKey = currToken.getLexeme();
 
         // move cursor to the value part

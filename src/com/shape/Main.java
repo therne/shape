@@ -2,7 +2,7 @@ package com.shape;
 
 import com.shape.ast.Source;
 import com.shape.converter.XmlConverter;
-import com.shape.error.LessError;
+import com.shape.error.ShapeError;
 import com.shape.lexer.Lexer;
 import com.shape.parser.ModifyProcessor;
 import com.shape.lexer.TokenStream;
@@ -49,7 +49,7 @@ public class Main {
                 Log.setCurrentSource(source);
                 processSource(source);
             }
-        } catch (LessError error) {
+        } catch (ShapeError error) {
             Log.error(error);
         }
     }
@@ -57,9 +57,9 @@ public class Main {
     /**
      * Processes source.
      * @param source
-     * @throws LessError
+     * @throws ShapeError
      */
-    private static void processSource(File source) throws LessError {
+    private static void processSource(File source) throws ShapeError {
         Log.debug("[SHAPE] Compiler Inspectation result");
         Log.debug("=============================");
         Log.benchStart("Total time spent");
