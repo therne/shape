@@ -13,6 +13,7 @@ import java.util.Stack;
  */
 public class Lexer {
     private File sourceFile;
+    private String document;
     private TokenStream code = new TokenStream();
     private TokenType currentlyParsing;
     private boolean expectingNext = false;
@@ -23,7 +24,10 @@ public class Lexer {
 
     public Lexer(File sourceFile) {
         this.sourceFile = sourceFile;
-        this.currentlyParsing = null;
+    }
+
+    public Lexer(String document) {
+        this.document = document;
     }
 
     /**
@@ -32,8 +36,10 @@ public class Lexer {
      * @return tokenized code
      */
     public TokenStream perform() throws LessError {
+
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(sourceFile));
+            BufferedReader reader = new BufferedReader(document != null ?
+                    new StringReader(document) : new FileReader(sourceFile));
 
             String line;
             while ((line = reader.readLine()) != null) analyze(line);
