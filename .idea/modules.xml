@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/gradle-plugin/gradle-build.iml" filepath="$PROJECT_DIR$/gradle-plugin/gradle-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gradle-plugin/gradle-plugin.iml" filepath="$PROJECT_DIR$/gradle-plugin/gradle-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/idea_plugin/idea_plugin.iml" filepath="$PROJECT_DIR$/idea_plugin/idea_plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/less.iml" filepath="$PROJECT_DIR$/less.iml" />
     </modules>
