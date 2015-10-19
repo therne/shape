@@ -22,7 +22,7 @@ public class XmlConverter {
         View view = (View) node;
 
         // starting tag
-        String className = AndroidDictionary.widgetName(view.getClassName());
+        String className = AndroidDictionary.originalClassName(view.getClassName());
         doc.append("<%s ", className);
         if (node.getParent() == null) doc.appendBack("xmlns:android=\"http://schemas.android.com/apk/res/android\"\n");
         else doc.appendBack("\n");

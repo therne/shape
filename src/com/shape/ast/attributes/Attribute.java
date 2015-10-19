@@ -19,7 +19,7 @@ public class Attribute {
 
     public Attribute(String namespace, String key, String value) {
         this.namespace = namespace;
-        this.key = AndroidDictionary.attributeName(key);
+        this.key = AndroidDictionary.originalAttrName(key);
         this.value = value;
 
         this.originalKey = key;

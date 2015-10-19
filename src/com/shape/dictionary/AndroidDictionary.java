@@ -1,114 +1,237 @@
 package com.shape.dictionary;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AndroidDictionary {
 
-    private static final Map<String, String>
-            classNames = new HashMap<>(),
-            attrs = new HashMap<>();
+    public static final Map<String, String>
+            SHP_TO_XML_CLASS_NAMES = new HashMap<>(),
+            SHP_TO_XML_ATTRS = new HashMap<>(),
+            XML_TO_SHP_CLASS_NAMES = new HashMap<>(),
+            XML_TO_SHP_ATTRS = new HashMap<>();
 
     static {
         /**
          * Class Name Aliases
          */
-
         // Layouts
-        classNames.put("linear", "LinearLayout");
-        classNames.put("relative", "RelativeLayout");
-        classNames.put("frame", "FrameLayout");
-        classNames.put("table", "TableLayout");
-        classNames.put("row", "TableRow");
+        addClassName("AbsoluteLayout", "Absolute");
+        addClassName("LinearLayout", "Linear");
+        addClassName("RelativeLayout", "Relative");
+        addClassName("FrameLayout", "Frame");
+        addClassName("TableLayout", "Table");
+        addClassName("TableRow", "Row");
 
         // Widget
-        classNames.put("text", "TextView");
-        classNames.put("button", "Button");
-        classNames.put("radio", "RadioButton");
-        classNames.put("check", "CheckBox");
-        classNames.put("switch", "Switch");
-        classNames.put("toggle", "ToggleButton");
-        classNames.put("imagebutton", "ImageButton");
-        classNames.put("image", "ImageView");
-        classNames.put("progress", "ProgressBar");
-        classNames.put("seek", "SeekBar");
-        classNames.put("rating", "RatingBar");
-        classNames.put("spinner", "Spinner");
-        classNames.put("web", "WebView");
-        classNames.put("edit", "EditText");
+        addClassName("TextView", "Text");
+        addClassName("Button", "Button");
+        addClassName("RadioButton", "Radio");
+        addClassName("CheckBox", "Check");
+        addClassName("Switch", "Switch");
+        addClassName("ToggleButton", "Toggle");
+        addClassName("ImageButton");
+        addClassName("ImageView", "Image");
+        addClassName("ProgressBar", "Progress");
+        addClassName("SeekBar", "Seek");
+        addClassName("RatingBar", "Rating");
+        addClassName("Spinner", "Spinner");
+        addClassName("WebView", "Web");
+        addClassName("EditText", "Edit");
+        addClassName("CalendarView", "Calendar");
 
         // Containers
-        classNames.put("radiogroup", "RadioGroup");
-        classNames.put("list", "ListView");
-        classNames.put("gridview", "GridView");
-        classNames.put("expandablelist", "ExpandableListView");
-        classNames.put("scroll", "ScrollView");
-        classNames.put("search", "SearchView");
-        classNames.put("tabhost", "TabHost");
-        classNames.put("video", "VideoView");
-
-        // Others
-        classNames.put("include", "include");
-        classNames.put("view", "View");
-        classNames.put("space", "Space");
-
-        // Support library
-        classNames.put("recycler", "android.support.v7.widget.RecyclerView");
-        classNames.put("card", "android.support.v7.widget.CardView");
-        classNames.put("viewpager", "android.support.v4.ViewPager");
-        classNames.put("gridlayout", "android.support.v7.widget.GridLayout");
+        addClassName("RadioGroup", "Radiogroup");
+        addClassName("ListView", "List");
+        addClassName("GridView", "GridView");
+        addClassName("ExpandableListView", "ExpandableList");
+        addClassName("ScrollView", "Scroll");
+        addClassName("SearchView", "Search");
+        addClassName("TabHost", "TabHost");
+        addClassName("TabView", "Tab");
+        addClassName("VideoView", "Video");
 
         /**
          * Attribute aliases
          */
+        addAttr("context");
+        addAttr("text");
+        addAttr("textSize");
+        addAttr("label");
+        addAttr("hint");
+        addAttr("prompt");
+        addAttr("onClick");
+        addAttr("inputType");
+        addAttr("inputMethod");
+        addAttr("layout_gravity", "layoutGravity");
+        addAttr("layout_width", "width");
+        addAttr("layout_height", "height");
+        addAttr("layout_weight", "weight");
+        addAttr("padding");
+        addAttr("paddingTop");
+        addAttr("paddingBottom");
+        addAttr("paddingLeft");
+        addAttr("paddingRight");
+        addAttr("paddingStart");
+        addAttr("paddingEnd");
+        addAttr("foreground");
+        addAttr("background");
+        addAttr("orientation");
+        addAttr("layout");
+        addAttr("rowCount");
+        addAttr("columnCount");
+        addAttr("labelFor");
+        addAttr("baselineAligned");
+        addAttr("contentDescription");
+        addAttr("imeActionLabel");
+        addAttr("privateImeOptions");
+        addAttr("numeric");
+        addAttr("imeActionId");
+        addAttr("imeOptions");
+        addAttr("freezesText");
+        addAttr("editorExtras");
+        addAttr("editable");
+        addAttr("digits");
+        addAttr("cursorVisible");
+        addAttr("capitalize");
+        addAttr("phoneNumber");
+        addAttr("password");
+        addAttr("bufferType");
+        addAttr("autoText");
+        addAttr("enabled");
+        addAttr("singleLine");
+        addAttr("scaleType");
+        addAttr("visibility");
+        addAttr("textIsSelectable");
+        addAttr("importantForAccessibility");
+        addAttr("listPreferredItemPaddingLeft");
+        addAttr("listPreferredItemPaddingRight");
+        addAttr("listPreferredItemPaddingStart");
+        addAttr("listPreferredItemPaddingEnd");
+        addAttr("index");
 
-        attrs.put("width", "layout_width");
-        attrs.put("height", "layout_height");
-        attrs.put("weight", "layout_weight");
-        attrs.put("margin", "layout_margin");
-        attrs.put("marginTop", "layout_marginTop");
-        attrs.put("marginLeft", "layout_marginLeft");
-        attrs.put("marginRight", "layout_marginRight");
-        attrs.put("marginBottom", "layout_marginBottom");
-        attrs.put("marginStart", "layout_marginStart");
-        attrs.put("marginEnd", "layout_marginEnd");
-        attrs.put("layoutGravity", "layout_gravity");
+        // AbsoluteLayout layout params
+        addAttr("layout_y", "y");
+        addAttr("layout_x", "x");
 
-        /**
-         * Param-aliasable attribute names
-         */
-//        aliasableAttrs.add("layout_width");
-//        aliasableAttrs.add("layout_height");
+        // GridLayout layout params
+        addAttr("layout_row", "row");
+        addAttr("layout_rowSpan", "rowSpan");
+        addAttr("layout_column", "column");
+        addAttr("layout_columnSpan", "columnSpan");
 
-        /**
-         * Param aliases
-         */
-//        params.put("match", "match_parent");
-//        params.put("wrap", "wrap_content");
-//        params.put("fill_parent", "match_parent"); // NO LEGACY!
+        // TableRow
+        addAttr("span", "layout_span");
+
+        // RelativeLayout layout params:
+        addFourSideAttr("layout_align", "align");
+        addFourSideAttr("layout_alignParent", "alignParent");
+        addAttr("layout_alignWithParentIfMissing", "alignWithParentIfMissing");
+        addAttr("layout_alignBaseline", "alignBaseline");
+        addAttr("layout_centerInParent", "centerInParent");
+        addAttr("layout_centerVertical", "centerVertical");
+        addAttr("layout_centerHorizontal", "centerHorizontal");
+        addAttr("layout_toRightOf", "toRightOf");
+        addAttr("layout_toLeftOf", "toLeftOf");
+        addAttr("layout_toStartOf", "toStartOf");
+        addAttr("layout_toEndOf", "toEndOf");
+        addAttr("layout_below", "below");
+        addAttr("layout_above", "above");
+
+        // Margins
+        addAttr("layout_margin", "margin");
+        addFourSideAttr("layout_margin", "margin");
+
+        // Attributes: Drawables
+        addAttr("tileMode");
+
+        // Attributes: CoordinatorLayout
+        addAttr("layout_anchor", "anchor");
+        addAttr("layout_anchorGravity", "anchorGravity");
+        addAttr("layout_behavior", "behavior");
+        addAttr("layout_keyline", "keyline");
+
+        addAttr("tag");
+        addAttr("numColumns");
+
+        addAttr("handle");
+        addAttr("content");
+        addAttr("checked");
+
+        addFourSideAttr("drawable"); // drawableTop, drawableBottom...
+        addAttr("drawablePadding");
+
+        addAttr("useDefaultMargins");
+        addAttr("marginsIncludedInAlignment");
+        addAttr("src");
+        addAttr("gravity");
+        addAttr("weightSum");
+        addAttr("ems");
     }
 
-    public static String widgetName(String lessName) {
-        String convertedValue = classNames.get(lessName.toLowerCase());
+    /**
+     * Converts Shape class name to original Android class name.
+     * @param shapeName Shape class name (ex: Linear)
+     * @return Original class name (ex: LinearLayout)
+     */
+    public static String originalClassName(String shapeName) {
+        String convertedValue = SHP_TO_XML_CLASS_NAMES.get(shapeName.toLowerCase());
         if (convertedValue == null) {
-            convertedValue = Character.toUpperCase(lessName.charAt(0)) + lessName.substring(1);
+            convertedValue = Character.toUpperCase(shapeName.charAt(0)) + shapeName.substring(1);
         }
         return convertedValue;
     }
-    
-    public static String attributeName(String lessName) {
-        return attrs.getOrDefault(lessName, lessName);
+
+    /**
+     * Converts original Android class name to Shape class name.
+     * @param originalName Original class name (ex: LinearLayout)
+     * @return Shape class name (ex: Linear)
+     */
+    public static String shapeClassName(String originalName) {
+        String convertedValue = XML_TO_SHP_CLASS_NAMES.get(originalName.toLowerCase());
+        if (convertedValue == null) {
+            convertedValue = Character.toUpperCase(originalName.charAt(0)) + originalName.substring(1);
+        }
+        return convertedValue;
     }
 
-//    @Deprecated
-//    public static boolean isAliasableAttr(String attrName) {
-//        return aliasableAttrs.contains(attrName);
-//    }
-//
-//    @Deprecated
-//    public static String param(String value) {
-//        return params.getOrDefault(value, value);
-//    }
+    public static String originalAttrName(String lessName) {
+        return SHP_TO_XML_ATTRS.getOrDefault(lessName, lessName);
+    }
+    
+    public static String shapeAttrName(String originalName) {
+        return XML_TO_SHP_ATTRS.getOrDefault(originalName, originalName);
+    }
+
+    private static final String FOUR_SIDES[] = {"Top", "Left", "Right", "Bottom", "Start", "End"};
+
+    /**
+     * Methods to support bi-directional converting.
+     */
+    private static void addFourSideAttr(String origPrefix, String shpPrefix) {
+        for (String side : FOUR_SIDES) addAttr(origPrefix + side, shpPrefix + side);
+    }
+
+    private static void addFourSideAttr(String origPrefix) {
+        addFourSideAttr(origPrefix, origPrefix);
+    }
+
+    private static void addAttr(String origName, String shpName) {
+        SHP_TO_XML_ATTRS.put(shpName, origName);
+        XML_TO_SHP_ATTRS.put(origName, shpName);
+    }
+
+    private static void addAttr(String origName) {
+        addAttr(origName, origName);
+    }
+
+    private static void addClassName(String origName, String shpName) {
+        SHP_TO_XML_CLASS_NAMES.put(shpName, origName);
+        XML_TO_SHP_ATTRS.put(origName, shpName);
+    }
+
+    private static void addClassName(String origName) {
+        addClassName(origName, origName);
+    }
+
 }
