@@ -1,28 +1,31 @@
 
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.3.4'
+    }
+}
+
 group 'com.shape'
-version '1.0-SNAPSHOT'
+version '0.1.0'
 
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'idea'
+apply plugin: 'com.novoda.bintray-release'
 
 configurations{
     provided
     provided.extendsFrom(compile)
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-}
-
 repositories {
     mavenCentral()
     jcenter()
 }
-
 
 dependencies {
     compile gradleApi()
@@ -34,8 +37,9 @@ dependencies {
 sourceSets {
     main {
         java {
-            // TODO: top module dependency. fix
+            // TODO: hard-coded top module dependency.
             srcDirs += '../src'
+            srcDirs += '../common/src'
         }
         compileClasspath += configurations.provided
     }
@@ -45,4 +49,13 @@ idea {
     module {
         scopes.PROVIDED.plus += [configurations.provided]
     }
+}
+
+// Publishing
+publish {
+    groupId = 'com.shape'
+    artifactId = 'gradle-plugin'
+    publishVersion = '0.1.0'
+    desc = 'Shape compiler plugin for Android Gradle'
+    website = 'https://github.com/therne/shape'
 }
