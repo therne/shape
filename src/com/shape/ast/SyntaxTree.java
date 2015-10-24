@@ -27,4 +27,20 @@ public class SyntaxTree {
     public Node getRoot() {
         return root;
     }
+
+    public void visitNodes(RecursiveCallback callback) {
+        callback.visit(root);
+        visitNodes(root, callback);
+    }
+
+    private void visitNodes(Node node, RecursiveCallback callback) {
+        for (Node child : node.getChildren()) {
+            callback.visit(child);
+            visitNodes(child, callback);
+        }
+    }
+
+    public interface RecursiveCallback {
+        void visit(Node node);
+    }
 }

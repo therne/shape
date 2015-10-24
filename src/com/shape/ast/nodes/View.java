@@ -44,4 +44,8 @@ public class View extends Node {
     public String getClassName() {
         return className;
     }
+
+    public String getId() {
+        return id;
+    }
 }
