@@ -21,7 +21,7 @@ public class ShapeFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getName() {
-        return "Shape file";
+        return "Shape";
     }
 
     @NotNull

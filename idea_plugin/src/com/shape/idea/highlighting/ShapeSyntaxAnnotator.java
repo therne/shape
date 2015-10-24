@@ -2,12 +2,12 @@ package com.shape.idea.highlighting;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.XmlHighlighterColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.psi.PsiElement;
-import com.shape.idea.TokenType;
 import com.shape.idea.psi.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +31,12 @@ public class ShapeSyntaxAnnotator implements Annotator {
             public void visitAttrValue(@NotNull ShapeAttrValue o) {
                 super.visitAttrValue(o);
                 setHighlighting(o, holder, XmlHighlighterColors.HTML_ATTRIBUTE_VALUE);
+            }
+
+            @Override
+            public void visitIdDefinition(@NotNull ShapeIdDefinition o) {
+                super.visitIdDefinition(o);
+                setHighlighting(o, holder, DefaultLanguageHighlighterColors.STATIC_FIELD);
             }
         });
     }
