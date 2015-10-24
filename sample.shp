@@ -11,10 +11,7 @@
  *
  * For Details : http://opensource.org/licenses/MIT
  */
-
-//import com.therne.models.User
-//use User user
-
+/*
 style label {
     width: wrap
     height: 24dp
@@ -38,4 +35,4 @@ Linear (width: match, height: match, vertical) {
 	Button (width: match, visible, text: "Play Game")
 }
 
-
+*/

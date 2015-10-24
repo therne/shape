@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
       <module fileurl="file://$PROJECT_DIR$/gradle-plugin/src/main/gradle-plugin.iml" filepath="$PROJECT_DIR$/gradle-plugin/src/main/gradle-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/idea_plugin/idea_plugin.iml" filepath="$PROJECT_DIR$/idea_plugin/idea_plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/less.iml" filepath="$PROJECT_DIR$/less.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shape.iml" filepath="$PROJECT_DIR$/shape.iml" />
     </modules>
   </component>
 </project>
