@@ -1,9 +1,6 @@
 package com.shape.idea.completion;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionProvider;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.completion.InsertHandler;
+import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.editor.Editor;
@@ -24,14 +21,17 @@ import java.util.ArrayList;
  */
 public class KeywordCompleter extends CompletionProvider<CompletionParameters> {
 
-    private static final InsertHandler<LookupElement> SPACE_INSERTER = (context, lookupElement) -> {
-        Editor editor = context.getEditor();
-        int cursorOffset = editor.getCaretModel().getOffset();
-        editor.getDocument().insertString(cursorOffset, " ");
-        editor.getCaretModel().moveToOffset(cursorOffset + 1);
+    private static final InsertHandler<LookupElement> SPACE_INSERTER = new InsertHandler<LookupElement>() {
+        @Override
+        public void handleInsert(InsertionContext context, LookupElement item) {
+            Editor editor = context.getEditor();
+            int cursorOffset = editor.getCaretModel().getOffset();
+            editor.getDocument().insertString(cursorOffset, " ");
+            editor.getCaretModel().moveToOffset(cursorOffset + 1);
+        }
     };
 
-    private static final ArrayList<LookupElement> LOOKUP_LIST = new ArrayList<>();
+    private static final ArrayList<LookupElement> LOOKUP_LIST = new ArrayList<LookupElement>();
     static {
         LOOKUP_LIST.add(LookupElementBuilder.create("import").withInsertHandler(SPACE_INSERTER));
         LOOKUP_LIST.add(LookupElementBuilder.create("use").withInsertHandler(SPACE_INSERTER));
@@ -46,7 +46,7 @@ public class KeywordCompleter extends CompletionProvider<CompletionParameters> {
     }
 
 
-        @Override
+    @Override
     protected void addCompletions(@NotNull CompletionParameters completionParameters,
                                   ProcessingContext processingContext,
                                   @NotNull CompletionResultSet resultSet) {

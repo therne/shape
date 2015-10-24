@@ -41,11 +41,14 @@ public class AttrKeyCompleter extends CompletionProvider<CompletionParameters> {
 
         for (String key : KEYS) {
             resultSet.addElement(LookupElementBuilder.create(key)
-                    .withInsertHandler((context, lookupElement) -> {
-                        Editor editor = context.getEditor();
-                        int cursorOffset = editor.getCaretModel().getOffset();
-                        editor.getDocument().insertString(cursorOffset,  ": ");
-                        editor.getCaretModel().moveToOffset(cursorOffset + 2);
+                    .withInsertHandler(new InsertHandler<LookupElement>() {
+                        @Override
+                        public void handleInsert(InsertionContext context, LookupElement item) {
+                            Editor editor = context.getEditor();
+                            int cursorOffset = editor.getCaretModel().getOffset();
+                            editor.getDocument().insertString(cursorOffset,  ": ");
+                            editor.getCaretModel().moveToOffset(cursorOffset + 2);
+                        }
                     })
             );
         }

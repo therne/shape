@@ -8,7 +8,7 @@ import java.util.Map;
  * @author Vista
  */
 public class Alias {
-    private Map<String, String> dictionary = new HashMap<>();
+    private Map<String, String> dictionary = new HashMap<String, String>();
 
     public void add(String original, String... aliases) {
         for (String alias : aliases) dictionary.put(alias, original);

@@ -6,10 +6,10 @@ import java.util.Map;
 public class AndroidDictionary {
 
     public static final Map<String, String>
-            SHP_TO_XML_CLASS_NAMES = new HashMap<>(),
-            SHP_TO_XML_ATTRS = new HashMap<>(),
-            XML_TO_SHP_CLASS_NAMES = new HashMap<>(),
-            XML_TO_SHP_ATTRS = new HashMap<>();
+            SHP_TO_XML_CLASS_NAMES = new HashMap<String, String>(),
+            SHP_TO_XML_ATTRS = new HashMap<String, String>(),
+            XML_TO_SHP_CLASS_NAMES = new HashMap<String, String>(),
+            XML_TO_SHP_ATTRS = new HashMap<String, String>();
 
     private static final String FOUR_SIDES[] = {"Top", "Left", "Right", "Bottom", "Start", "End"};
 

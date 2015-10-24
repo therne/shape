@@ -19,8 +19,8 @@ import static com.shape.idea.psi.ShapeTypes.*;
  * @author Vista
  */
 public abstract class ShapeSyntaxColors  {
-    private static final HashMap<String, TextAttributesKey> COLOR_MAP = new HashMap<>();
-    private static final HashMap<IElementType, TextAttributesKey[]> ATTR_MAP = new HashMap<>();
+    private static final HashMap<String, TextAttributesKey> COLOR_MAP = new HashMap<String, TextAttributesKey>();
+    private static final HashMap<IElementType, TextAttributesKey[]> ATTR_MAP = new HashMap<IElementType, TextAttributesKey[]>();
     private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
     static {

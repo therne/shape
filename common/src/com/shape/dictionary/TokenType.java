@@ -153,11 +153,11 @@ public enum TokenType {
         LITERAL_NULL ("null", LITERAL),
         LITERAL_PERCENTAGE (LITERAL); // ex) 100%
 
-    private static HashMap<String, TokenType> lexemeMap = new HashMap<>();
+    private static HashMap<String, TokenType> lexemeMap = new HashMap<String, TokenType>();
 
     private TokenType parent;
     private String lexeme;
-    private List<TokenType> children = new ArrayList<>();
+    private List<TokenType> children = new ArrayList<TokenType>();
 
     static {
         // put all [lexeme: TokenType] pair to the lexemeMap,

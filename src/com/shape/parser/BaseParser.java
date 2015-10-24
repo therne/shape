@@ -43,8 +43,8 @@ public abstract class BaseParser {
 
         source = new Source(filename);
         ast = source.getAst();
-        expecting = new ArrayList<>();
-        nodeStack = new Stack<>();
+        expecting = new ArrayList<TokenType>();
+        nodeStack = new Stack<Node>();
 
         while (pull() != null) {
             if (expecting.isEmpty()) expect();
