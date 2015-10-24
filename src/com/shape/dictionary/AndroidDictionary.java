@@ -11,6 +11,8 @@ public class AndroidDictionary {
             XML_TO_SHP_CLASS_NAMES = new HashMap<>(),
             XML_TO_SHP_ATTRS = new HashMap<>();
 
+    private static final String FOUR_SIDES[] = {"Top", "Left", "Right", "Bottom", "Start", "End"};
+
     static {
         /**
          * Class Name Aliases
@@ -175,11 +177,7 @@ public class AndroidDictionary {
      * @return Original class name (ex: LinearLayout)
      */
     public static String originalClassName(String shapeName) {
-        String convertedValue = SHP_TO_XML_CLASS_NAMES.get(shapeName.toLowerCase());
-        if (convertedValue == null) {
-            convertedValue = Character.toUpperCase(shapeName.charAt(0)) + shapeName.substring(1);
-        }
-        return convertedValue;
+        return SHP_TO_XML_CLASS_NAMES.getOrDefault(shapeName, shapeName);
     }
 
     /**
@@ -188,11 +186,7 @@ public class AndroidDictionary {
      * @return Shape class name (ex: Linear)
      */
     public static String shapeClassName(String originalName) {
-        String convertedValue = XML_TO_SHP_CLASS_NAMES.get(originalName.toLowerCase());
-        if (convertedValue == null) {
-            convertedValue = Character.toUpperCase(originalName.charAt(0)) + originalName.substring(1);
-        }
-        return convertedValue;
+        return XML_TO_SHP_CLASS_NAMES.getOrDefault(originalName, originalName);
     }
 
     public static String originalAttrName(String lessName) {
@@ -202,8 +196,6 @@ public class AndroidDictionary {
     public static String shapeAttrName(String originalName) {
         return XML_TO_SHP_ATTRS.getOrDefault(originalName, originalName);
     }
-
-    private static final String FOUR_SIDES[] = {"Top", "Left", "Right", "Bottom", "Start", "End"};
 
     /**
      * Methods to support bi-directional converting.
@@ -227,7 +219,7 @@ public class AndroidDictionary {
 
     private static void addClassName(String origName, String shpName) {
         SHP_TO_XML_CLASS_NAMES.put(shpName, origName);
-        XML_TO_SHP_ATTRS.put(origName, shpName);
+        XML_TO_SHP_CLASS_NAMES.put(origName, shpName);
     }
 
     private static void addClassName(String origName) {
