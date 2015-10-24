@@ -8,6 +8,15 @@ import com.intellij.psi.PsiElement;
 public interface ShapeAttrValue extends PsiElement {
 
   @Nullable
+  ShapeAttrIdentValue getAttrIdentValue();
+
+  @Nullable
+  ShapeAttrStrValue getAttrStrValue();
+
+  @Nullable
+  ShapeColorCode getColorCode();
+
+  @Nullable
   ShapeDimension getDimension();
 
   @Nullable

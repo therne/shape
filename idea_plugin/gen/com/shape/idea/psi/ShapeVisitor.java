@@ -11,7 +11,15 @@ public class ShapeVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitAttrIdentValue(@NotNull ShapeAttrIdentValue o) {
+    visitPsiElement(o);
+  }
+
   public void visitAttrKey(@NotNull ShapeAttrKey o) {
+    visitPsiElement(o);
+  }
+
+  public void visitAttrStrValue(@NotNull ShapeAttrStrValue o) {
     visitPsiElement(o);
   }
 
@@ -36,6 +44,10 @@ public class ShapeVisitor extends PsiElementVisitor {
   }
 
   public void visitClassName(@NotNull ShapeClassName o) {
+    visitPsiElement(o);
+  }
+
+  public void visitColorCode(@NotNull ShapeColorCode o) {
     visitPsiElement(o);
   }
 

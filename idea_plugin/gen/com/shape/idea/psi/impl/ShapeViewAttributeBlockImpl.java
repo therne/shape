@@ -24,8 +24,8 @@ public class ShapeViewAttributeBlockImpl extends ASTWrapperPsiElement implements
 
   @Override
   @NotNull
-  public List<ShapeAttributePair> getAttributePairList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, ShapeAttributePair.class);
+  public List<ShapeAttribute> getAttributeList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, ShapeAttribute.class);
   }
 
 }

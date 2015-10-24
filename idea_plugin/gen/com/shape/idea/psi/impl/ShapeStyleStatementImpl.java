@@ -23,9 +23,9 @@ public class ShapeStyleStatementImpl extends ASTWrapperPsiElement implements Sha
   }
 
   @Override
-  @NotNull
+  @Nullable
   public ShapeAttributeBlock getAttributeBlock() {
-    return findNotNullChildByClass(ShapeAttributeBlock.class);
+    return findChildByClass(ShapeAttributeBlock.class);
   }
 
   @Override

@@ -12,10 +12,13 @@ public interface ShapeTypes {
   IElementType ATTRIBUTE = new ShapeElementType("ATTRIBUTE");
   IElementType ATTRIBUTE_BLOCK = new ShapeElementType("ATTRIBUTE_BLOCK");
   IElementType ATTRIBUTE_PAIR = new ShapeElementType("ATTRIBUTE_PAIR");
+  IElementType ATTR_IDENT_VALUE = new ShapeElementType("ATTR_IDENT_VALUE");
   IElementType ATTR_KEY = new ShapeElementType("ATTR_KEY");
+  IElementType ATTR_STR_VALUE = new ShapeElementType("ATTR_STR_VALUE");
   IElementType ATTR_VALUE = new ShapeElementType("ATTR_VALUE");
   IElementType BREAK_STATEMENT = new ShapeElementType("BREAK_STATEMENT");
   IElementType CLASS_NAME = new ShapeElementType("CLASS_NAME");
+  IElementType COLOR_CODE = new ShapeElementType("COLOR_CODE");
   IElementType CONTINUE_STATEMENT = new ShapeElementType("CONTINUE_STATEMENT");
   IElementType DIMENSION = new ShapeElementType("DIMENSION");
   IElementType DO_STATEMENT = new ShapeElementType("DO_STATEMENT");
@@ -169,8 +172,14 @@ public interface ShapeTypes {
       else if (type == ATTRIBUTE_PAIR) {
         return new ShapeAttributePairImpl(node);
       }
+      else if (type == ATTR_IDENT_VALUE) {
+        return new ShapeAttrIdentValueImpl(node);
+      }
       else if (type == ATTR_KEY) {
         return new ShapeAttrKeyImpl(node);
+      }
+      else if (type == ATTR_STR_VALUE) {
+        return new ShapeAttrStrValueImpl(node);
       }
       else if (type == ATTR_VALUE) {
         return new ShapeAttrValueImpl(node);
@@ -180,6 +189,9 @@ public interface ShapeTypes {
       }
       else if (type == CLASS_NAME) {
         return new ShapeClassNameImpl(node);
+      }
+      else if (type == COLOR_CODE) {
+        return new ShapeColorCodeImpl(node);
       }
       else if (type == CONTINUE_STATEMENT) {
         return new ShapeContinueStatementImpl(node);

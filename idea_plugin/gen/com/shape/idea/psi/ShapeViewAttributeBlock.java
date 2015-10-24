@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface ShapeViewAttributeBlock extends PsiElement {
 
   @NotNull
-  List<ShapeAttributePair> getAttributePairList();
+  List<ShapeAttribute> getAttributeList();
 
 }

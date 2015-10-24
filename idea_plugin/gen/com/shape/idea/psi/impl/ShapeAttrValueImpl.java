@@ -24,6 +24,24 @@ public class ShapeAttrValueImpl extends ASTWrapperPsiElement implements ShapeAtt
 
   @Override
   @Nullable
+  public ShapeAttrIdentValue getAttrIdentValue() {
+    return findChildByClass(ShapeAttrIdentValue.class);
+  }
+
+  @Override
+  @Nullable
+  public ShapeAttrStrValue getAttrStrValue() {
+    return findChildByClass(ShapeAttrStrValue.class);
+  }
+
+  @Override
+  @Nullable
+  public ShapeColorCode getColorCode() {
+    return findChildByClass(ShapeColorCode.class);
+  }
+
+  @Override
+  @Nullable
   public ShapeDimension getDimension() {
     return findChildByClass(ShapeDimension.class);
   }

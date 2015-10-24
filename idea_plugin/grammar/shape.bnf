@@ -100,30 +100,34 @@ UseBlock ::= '{' ('}' | VariableDeclarations  '}')
 // Resources
 ResourceReference ::= '@' identifier '/' identifier
 Dimension ::= (integer | floati) (dp | sp | px | '%')
-AttrValue ::= Dimension | ResourceReference | str | integer | floati | identifier
+ColorCode ::= view_id_name // #identifier
+AttrIdentValue ::= identifier
+AttrStrValue ::= str
+AttrValue ::= Dimension | ResourceReference | ColorCode | AttrStrValue | AttrIdentValue | integer | floati
 
 // Styles
-StyleStatement ::= style identifier ['(' Selector ')'] AttributeBlock
+StyleStatement ::= style identifier ['(' Selector ')'] AttributeBlock { pin=2 }
 Selector ::= '*' /* NOT IMPLEMENTED NOW */
 
-AttributeBlock ::= '{' ('}' | Attributes '}')
+AttributeBlock ::= '{' ('}' | Attributes '}') { pin(".*")=1 }
 private Attributes ::= <<SemicolonListOf Attribute>> { pin=1 recoverWhile=AttrRecover }
-private AttrRecover ::= !('}')
+private AttrRecover ::= !('}' | AttrKey)
 
-Attribute ::= StateAttribute | AttributePair
-AttributePair ::= AttrKey [':' AttrValue] { pin=1 }
+Attribute ::= AttributePair | StateAttribute
+AttributePair ::= AttrKey ':' AttrValue { pin=1 }
 StateAttribute ::= AttrKey
 AttrKey ::= identifier
 
 // Views
 View ::= ViewName {StyleReference | IdDefinition }* ViewAttributeBlock ViewBlock? { pin=1 }
-RootView ::= ViewName {StyleReference | IdDefinition }* ViewAttributeBlock ViewBlock? { pin=3 } // different pin
-private attrDelimiter ::= ',' | '<NL>'
+RootView ::= ViewName {StyleReference | IdDefinition }* ViewAttributeBlock ViewBlock? { pin=3 } // has different pin
+private attrDelimiter ::= ',' | '<newline>'
 ViewName ::= ClassName
 
 
-ViewAttributeBlock ::= '(' AttributePair { attrDelimiter (AttributePair | &')')}* ')' { pin(".*")=1 }
+//ViewAttributeBlock ::= '(' AttributePair { attrDelimiter (AttributePair | &')')}* ')' { pin(".*")=1 }
 //ViewBlock ::= <<consumeBlock>> | '{' ('}' | (<<withOff Views "BLOCK?" "PAR">> | (!() Views)) '}') {pin(".*")=1 }
+ViewAttributeBlock ::= '(' (')' | Attribute { attrDelimiter Attribute }* attrDelimiter? ')')
 ViewBlock ::= '{' ('}' |  Views '}') { pin(".*")=1 }
 private Views ::= <<SemicolonListOf View>> { pin=1 recoverWhile=ViewRecover }
 ViewRecover ::= !('}' | ClassName)

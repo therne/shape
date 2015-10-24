@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface ShapeStyleStatement extends PsiElement {
 
-  @NotNull
+  @Nullable
   ShapeAttributeBlock getAttributeBlock();
 
   @Nullable

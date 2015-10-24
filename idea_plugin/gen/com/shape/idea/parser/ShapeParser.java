@@ -26,8 +26,14 @@ public class ShapeParser implements PsiParser, LightPsiParser {
     if (t == ASSIGN_STATEMENT) {
       r = AssignStatement(b, 0);
     }
+    else if (t == ATTR_IDENT_VALUE) {
+      r = AttrIdentValue(b, 0);
+    }
     else if (t == ATTR_KEY) {
       r = AttrKey(b, 0);
+    }
+    else if (t == ATTR_STR_VALUE) {
+      r = AttrStrValue(b, 0);
     }
     else if (t == ATTR_VALUE) {
       r = AttrValue(b, 0);
@@ -46,6 +52,9 @@ public class ShapeParser implements PsiParser, LightPsiParser {
     }
     else if (t == CLASS_NAME) {
       r = ClassName(b, 0);
+    }
+    else if (t == COLOR_CODE) {
+      r = ColorCode(b, 0);
     }
     else if (t == CONTINUE_STATEMENT) {
       r = ContinueStatement(b, 0);
@@ -201,6 +210,18 @@ public class ShapeParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // identifier
+  public static boolean AttrIdentValue(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AttrIdentValue")) return false;
+    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, IDENTIFIER);
+    exit_section_(b, m, ATTR_IDENT_VALUE, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // identifier
   public static boolean AttrKey(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AttrKey")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
@@ -212,7 +233,7 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !('}')
+  // !('}' | AttrKey)
   static boolean AttrRecover(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AttrRecover")) return false;
     boolean r;
@@ -222,41 +243,55 @@ public class ShapeParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ('}')
+  // '}' | AttrKey
   private static boolean AttrRecover_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AttrRecover_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, RBRACE);
+    if (!r) r = AttrKey(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   /* ********************************************************** */
-  // Dimension | ResourceReference | str | integer | floati | identifier
+  // str
+  public static boolean AttrStrValue(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AttrStrValue")) return false;
+    if (!nextTokenIs(b, STR)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, STR);
+    exit_section_(b, m, ATTR_STR_VALUE, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // Dimension | ResourceReference | ColorCode | AttrStrValue | AttrIdentValue | integer | floati
   public static boolean AttrValue(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AttrValue")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, "<attr value>");
     r = Dimension(b, l + 1);
     if (!r) r = ResourceReference(b, l + 1);
-    if (!r) r = consumeToken(b, STR);
+    if (!r) r = ColorCode(b, l + 1);
+    if (!r) r = AttrStrValue(b, l + 1);
+    if (!r) r = AttrIdentValue(b, l + 1);
     if (!r) r = consumeToken(b, INTEGER);
     if (!r) r = consumeToken(b, FLOATI);
-    if (!r) r = consumeToken(b, IDENTIFIER);
     exit_section_(b, l, m, ATTR_VALUE, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // StateAttribute | AttributePair
+  // AttributePair | StateAttribute
   public static boolean Attribute(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Attribute")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = StateAttribute(b, l + 1);
-    if (!r) r = AttributePair(b, l + 1);
+    r = AttributePair(b, l + 1);
+    if (!r) r = StateAttribute(b, l + 1);
     exit_section_(b, m, ATTRIBUTE, r);
     return r;
   }
@@ -266,12 +301,13 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   public static boolean AttributeBlock(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AttributeBlock")) return false;
     if (!nextTokenIs(b, LBRACE)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, null);
     r = consumeToken(b, LBRACE);
+    p = r; // pin = 1
     r = r && AttributeBlock_1(b, l + 1);
-    exit_section_(b, m, ATTRIBUTE_BLOCK, r);
-    return r;
+    exit_section_(b, l, m, ATTRIBUTE_BLOCK, r, p, null);
+    return r || p;
   }
 
   // '}' | Attributes '}'
@@ -288,16 +324,17 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   // Attributes '}'
   private static boolean AttributeBlock_1_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AttributeBlock_1_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, null);
     r = Attributes(b, l + 1);
+    p = r; // pin = 1
     r = r && consumeToken(b, RBRACE);
-    exit_section_(b, m, null, r);
-    return r;
+    exit_section_(b, l, m, null, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */
-  // AttrKey [':' AttrValue]
+  // AttrKey ':' AttrValue
   public static boolean AttributePair(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AttributePair")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
@@ -305,27 +342,10 @@ public class ShapeParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, null);
     r = AttrKey(b, l + 1);
     p = r; // pin = 1
-    r = r && AttributePair_1(b, l + 1);
+    r = r && report_error_(b, consumeToken(b, COLON));
+    r = p && AttrValue(b, l + 1) && r;
     exit_section_(b, l, m, ATTRIBUTE_PAIR, r, p, null);
     return r || p;
-  }
-
-  // [':' AttrValue]
-  private static boolean AttributePair_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "AttributePair_1")) return false;
-    AttributePair_1_0(b, l + 1);
-    return true;
-  }
-
-  // ':' AttrValue
-  private static boolean AttributePair_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "AttributePair_1_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, COLON);
-    r = r && AttrValue(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
   }
 
   /* ********************************************************** */
@@ -360,6 +380,18 @@ public class ShapeParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b);
     r = PackageName(b, l + 1);
     exit_section_(b, m, CLASS_NAME, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // view_id_name
+  public static boolean ColorCode(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ColorCode")) return false;
+    if (!nextTokenIs(b, VIEW_ID_NAME)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, VIEW_ID_NAME);
+    exit_section_(b, m, COLOR_CODE, r);
     return r;
   }
 
@@ -862,7 +894,7 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // identifier {'.' identifier}*
+  // identifier dot_head_name*
   public static boolean PackageName(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "PackageName")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
@@ -875,27 +907,16 @@ public class ShapeParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // {'.' identifier}*
+  // dot_head_name*
   private static boolean PackageName_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "PackageName_1")) return false;
     int c = current_position_(b);
     while (true) {
-      if (!PackageName_1_0(b, l + 1)) break;
+      if (!consumeToken(b, DOT_HEAD_NAME)) break;
       if (!empty_element_parsed_guard_(b, "PackageName_1", c)) break;
       c = current_position_(b);
     }
     return true;
-  }
-
-  // '.' identifier
-  private static boolean PackageName_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "PackageName_1_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, DOT);
-    r = r && consumeToken(b, IDENTIFIER);
-    exit_section_(b, m, null, r);
-    return r;
   }
 
   /* ********************************************************** */
@@ -1432,13 +1453,14 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   public static boolean StyleStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "StyleStatement")) return false;
     if (!nextTokenIs(b, STYLE)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, STYLE, IDENTIFIER);
-    r = r && StyleStatement_2(b, l + 1);
-    r = r && AttributeBlock(b, l + 1);
-    exit_section_(b, m, STYLE_STATEMENT, r);
-    return r;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, null);
+    r = consumeTokens(b, 2, STYLE, IDENTIFIER);
+    p = r; // pin = 2
+    r = r && report_error_(b, StyleStatement_2(b, l + 1));
+    r = p && AttributeBlock(b, l + 1) && r;
+    exit_section_(b, l, m, STYLE_STATEMENT, r, p, null);
+    return r || p;
   }
 
   // ['(' Selector ')']
@@ -1856,64 +1878,70 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '(' AttributePair { attrDelimiter (AttributePair | &')')}* ')'
+  // '(' (')' | Attribute { attrDelimiter Attribute }* attrDelimiter? ')')
   public static boolean ViewAttributeBlock(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ViewAttributeBlock")) return false;
     if (!nextTokenIs(b, LPAREN)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
+    boolean r;
+    Marker m = enter_section_(b);
     r = consumeToken(b, LPAREN);
-    p = r; // pin = 1
-    r = r && report_error_(b, AttributePair(b, l + 1));
-    r = p && report_error_(b, ViewAttributeBlock_2(b, l + 1)) && r;
-    r = p && consumeToken(b, RPAREN) && r;
-    exit_section_(b, l, m, VIEW_ATTRIBUTE_BLOCK, r, p, null);
-    return r || p;
+    r = r && ViewAttributeBlock_1(b, l + 1);
+    exit_section_(b, m, VIEW_ATTRIBUTE_BLOCK, r);
+    return r;
   }
 
-  // { attrDelimiter (AttributePair | &')')}*
-  private static boolean ViewAttributeBlock_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ViewAttributeBlock_2")) return false;
+  // ')' | Attribute { attrDelimiter Attribute }* attrDelimiter? ')'
+  private static boolean ViewAttributeBlock_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ViewAttributeBlock_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, RPAREN);
+    if (!r) r = ViewAttributeBlock_1_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // Attribute { attrDelimiter Attribute }* attrDelimiter? ')'
+  private static boolean ViewAttributeBlock_1_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ViewAttributeBlock_1_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = Attribute(b, l + 1);
+    r = r && ViewAttributeBlock_1_1_1(b, l + 1);
+    r = r && ViewAttributeBlock_1_1_2(b, l + 1);
+    r = r && consumeToken(b, RPAREN);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // { attrDelimiter Attribute }*
+  private static boolean ViewAttributeBlock_1_1_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ViewAttributeBlock_1_1_1")) return false;
     int c = current_position_(b);
     while (true) {
-      if (!ViewAttributeBlock_2_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "ViewAttributeBlock_2", c)) break;
+      if (!ViewAttributeBlock_1_1_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "ViewAttributeBlock_1_1_1", c)) break;
       c = current_position_(b);
     }
     return true;
   }
 
-  // attrDelimiter (AttributePair | &')')
-  private static boolean ViewAttributeBlock_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ViewAttributeBlock_2_0")) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, null);
-    r = attrDelimiter(b, l + 1);
-    p = r; // pin = 1
-    r = r && ViewAttributeBlock_2_0_1(b, l + 1);
-    exit_section_(b, l, m, null, r, p, null);
-    return r || p;
-  }
-
-  // AttributePair | &')'
-  private static boolean ViewAttributeBlock_2_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ViewAttributeBlock_2_0_1")) return false;
+  // attrDelimiter Attribute
+  private static boolean ViewAttributeBlock_1_1_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ViewAttributeBlock_1_1_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = AttributePair(b, l + 1);
-    if (!r) r = ViewAttributeBlock_2_0_1_1(b, l + 1);
+    r = attrDelimiter(b, l + 1);
+    r = r && Attribute(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // &')'
-  private static boolean ViewAttributeBlock_2_0_1_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ViewAttributeBlock_2_0_1_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _AND_, null);
-    r = consumeToken(b, RPAREN);
-    exit_section_(b, l, m, null, r, false, null);
-    return r;
+  // attrDelimiter?
+  private static boolean ViewAttributeBlock_1_1_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ViewAttributeBlock_1_1_2")) return false;
+    attrDelimiter(b, l + 1);
+    return true;
   }
 
   /* ********************************************************** */
@@ -2015,13 +2043,14 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ',' | '<NL>'
+  // ',' | '<newline>'
   static boolean attrDelimiter(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "attrDelimiter")) return false;
+    if (!nextTokenIs(b, "", COMMA, SEMICOLON_SYNTHETIC)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
-    if (!r) r = consumeToken(b, "<NL>");
+    if (!r) r = consumeToken(b, SEMICOLON_SYNTHETIC);
     exit_section_(b, m, null, r);
     return r;
   }
