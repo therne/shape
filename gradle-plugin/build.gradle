@@ -2,29 +2,47 @@
 group 'com.shape'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'java'
 apply plugin: 'groovy'
+apply plugin: 'idea'
 
-configurations {
+configurations{
     provided
+    provided.extendsFrom(compile)
 }
 
 buildscript {
     repositories {
         mavenCentral()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        jcenter()
     }
 }
 
-sourceSets {
-    main {
-        compileClasspath += configurations.provided
-    }
+repositories {
+    mavenCentral()
+    jcenter()
 }
+
 
 dependencies {
     compile gradleApi()
     compile localGroovy()
-    provided 'com.android.tools.build:gradle:1.0.0'
+
+    provided 'com.android.tools.build:gradle:1.3.0'
+}
+
+sourceSets {
+    main {
+        java {
+            // TODO: top module dependency. fix
+            srcDirs += '../src'
+        }
+        compileClasspath += configurations.provided
+    }
+}
+
+idea {
+    module {
+        scopes.PROVIDED.plus += [configurations.provided]
+    }
 }

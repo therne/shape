@@ -1,43 +1,54 @@
 package com.shape.gradle
 
+import com.shape.ast.Source
+import com.shape.converter.XmlConverter
+import com.shape.lexer.Lexer
+import com.shape.lexer.TokenStream
+import com.shape.parser.ModifyProcessor
+import com.shape.parser.Parser
+import groovy.io.FileType
 import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputDirectory
-import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 
 /**
  * Copyright (C) 2015 Therne. All rights are reserved.
  * @author Vista
  */
 class ShapeConvertTask extends DefaultTask {
-    @InputDirectory
+
+    // merged resources directory (usually build/incremental/res/$variant/)
     def File inputDir
 
-    @OutputDirectory
-    def File outputDir
-
-    @Input
-    def inputProperty
-
     @TaskAction
-    def execute(IncrementalTaskInputs inputs) {
-        println inputs.incremental ?
-                "CHANGED inputs considered out of date" :
-                "ALL inputs considered out of date"
+    def run() {
+        if (!inputDir.exists()) return
 
-        def changes = []
-        inputs.outOfDate { changes += it }
+        inputDir.eachFileRecurse(FileType.FILES, { file ->
+            // filter only .shp files
+            if (!file.name.endsWith(".shp")) return
 
-        changes.each {
-            println "changed file : ${it.file.name}"
-            // TODO: DO CONVERSION
-        }
+            // convert
+            def doc = processSource(file)
+            new File(file.path.substring(0, file.path.size() - 4) + ".xml").withWriter { it.append doc }
+        })
+    }
 
-        inputs.removed { change ->
-            println "removed : ${change.file.name}"
-            change.file.delete()
-        }
+    static def processSource(File source) {
+        // lexing!
+        Lexer lexer = new Lexer(source)
+        TokenStream tokens = lexer.perform()
+
+        // Parsing
+        Parser parser = new Parser()
+        Source src = parser.parse(source.getName(), tokens)
+
+        // Run Modifier
+        ModifyProcessor.modify(src.getAst())
+
+        // Convert to XML
+        XmlConverter converter = new XmlConverter()
+        String doc = converter.performConvert(src.getAst())
+
+        return doc
     }
 }
