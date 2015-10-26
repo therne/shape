@@ -1,9 +1,9 @@
 package com.shape.lexer;
 
-import com.shape.error.ShapeError;
-import com.shape.error.SyntaxError;
 import com.shape.dictionary.Operator;
 import com.shape.dictionary.TokenType;
+import com.shape.error.ShapeError;
+import com.shape.error.SyntaxError;
 
 import java.io.*;
 import java.util.Stack;

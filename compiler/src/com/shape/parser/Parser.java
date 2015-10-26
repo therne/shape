@@ -1,5 +1,6 @@
 package com.shape.parser;
 
+import com.shape.Log;
 import com.shape.ast.Modifiers;
 import com.shape.ast.attributes.*;
 import com.shape.ast.nodes.Node;
@@ -254,11 +255,8 @@ public class Parser extends BaseParser {
                 throw new SyntaxError("percentage out of bound : " + percentage + "%.", currToken.getLineNo(), currToken.getColNo());
 
             Attribute weightAttr = new Attribute("weight", value.getLexeme());
-            weightAttr.addModifier(Modifiers.weightModifier());
-            weightAttr.addModifier(v -> {
-                View parent = (View) v.getParent();
-                if (parent != null) parent.addAttribute(new Attribute("weightSum", "100"));
-            });
+            weightAttr.getModifiers().add(Modifiers.weightModifer);
+            weightAttr.getModifiers().add(Modifiers.weightSumModifier);
             node.addAttribute(weightAttr);
         }
     }
@@ -332,7 +330,7 @@ public class Parser extends BaseParser {
             case "weight":
                 // Apply Modifier for optimization (layout_height=0dp)
                 attr = new Attribute(attrKey, value);
-                attr.addModifier(Modifiers.weightModifier());
+                attr.getModifiers().add(Modifiers.weightModifer);
                 break;
 
 //              case "margin":

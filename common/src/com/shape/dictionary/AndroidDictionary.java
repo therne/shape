@@ -5,11 +5,18 @@ import java.util.Map;
 
 public class AndroidDictionary {
 
-    public static final Map<String, String>
+    public static final String RESOURCE_TYPES[] = new String[] {
+        "anim", "animator", "bool", "color", "drawable", "dimen", "id", "integer",
+                "layout", "menu", "string", "style"
+    };
+
+    private static final Map<String, String>
             SHP_TO_XML_CLASS_NAMES = new HashMap<String, String>(),
             SHP_TO_XML_ATTRS = new HashMap<String, String>(),
+            SHP_TO_XML_PARAMS = new HashMap<String, String>(),
             XML_TO_SHP_CLASS_NAMES = new HashMap<String, String>(),
-            XML_TO_SHP_ATTRS = new HashMap<String, String>();
+            XML_TO_SHP_ATTRS = new HashMap<String, String>(),
+            XML_TO_SHP_PARAMS = new HashMap<String, String>();
 
     private static final String FOUR_SIDES[] = {"Top", "Left", "Right", "Bottom", "Start", "End"};
 
@@ -169,6 +176,15 @@ public class AndroidDictionary {
         addAttr("gravity");
         addAttr("weightSum");
         addAttr("ems");
+
+        /**
+         * Parameter aliases
+         */
+        addParam("match_parent", "match");
+        addParam("wrap_content", "wrap");
+
+        // Force convert fill_parent to match_parent
+        XML_TO_SHP_ATTRS.put("fill_parent", "match");
     }
 
     /**
@@ -195,6 +211,14 @@ public class AndroidDictionary {
     
     public static String shapeAttrName(String originalName) {
         return XML_TO_SHP_ATTRS.getOrDefault(originalName, originalName);
+    }
+
+    public static String originalParam(String lessName) {
+        return SHP_TO_XML_PARAMS.getOrDefault(lessName, lessName);
+    }
+
+    public static String shapeParam(String originalName) {
+        return XML_TO_SHP_PARAMS.getOrDefault(originalName, originalName);
     }
 
     /**
@@ -224,6 +248,15 @@ public class AndroidDictionary {
 
     private static void addClassName(String origName) {
         addClassName(origName, origName);
+    }
+
+    private static void addParam(String origName, String shpName) {
+        SHP_TO_XML_PARAMS.put(shpName, origName);
+        XML_TO_SHP_ATTRS.put(origName, shpName);
+    }
+
+    private static void addParam(String origName) {
+        addParam(origName, origName);
     }
 
 }

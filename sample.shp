@@ -11,7 +11,7 @@
  *
  * For Details : http://opensource.org/licenses/MIT
  */
-/*
+
 style label {
     width: wrap
     height: 24dp
@@ -34,5 +34,3 @@ Linear (width: match, height: match, vertical) {
 
 	Button (width: match, visible, text: "Play Game")
 }
-
-*/

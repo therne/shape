@@ -4,12 +4,15 @@ import com.shape.ast.Source;
 import com.shape.converter.XmlConverter;
 import com.shape.error.ShapeError;
 import com.shape.lexer.Lexer;
-import com.shape.parser.ModifyProcessor;
 import com.shape.lexer.TokenStream;
+import com.shape.parser.ModifyProcessor;
 import com.shape.parser.Parser;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(String args[]) {
@@ -78,7 +81,7 @@ public class Main {
 
         // Run Modifier
         Log.benchStart("Modification");
-        ModifyProcessor.modify(src.getAst());
+        ModifyProcessor.INSTANCE.modify(src.getAst());
         Log.benchEnd("Modification");
 
         // Convert to XML

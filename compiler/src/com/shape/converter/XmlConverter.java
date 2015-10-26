@@ -1,10 +1,10 @@
 package com.shape.converter;
 
-import com.shape.ast.attributes.Attribute;
-import com.shape.dictionary.AndroidDictionary;
 import com.shape.ast.SyntaxTree;
+import com.shape.ast.attributes.Attribute;
 import com.shape.ast.nodes.Node;
 import com.shape.ast.nodes.View;
+import com.shape.dictionary.AndroidDictionary;
 
 /**
  * Copyright (C) 2015 Therne. All rights are reserved.
