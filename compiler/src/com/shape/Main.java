@@ -9,6 +9,8 @@ import com.shape.parser.ModifyProcessor;
 import com.shape.parser.Parser;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +56,9 @@ public class Main {
             }
         } catch (ShapeError error) {
             Log.error(error);
+
+        } catch (FileNotFoundException error) {
+            error.printStackTrace(System.err);
         }
     }
 
@@ -62,14 +67,14 @@ public class Main {
      * @param source
      * @throws ShapeError
      */
-    private static void processSource(File source) throws ShapeError {
+    private static void processSource(File source) throws ShapeError, FileNotFoundException {
         Log.debug("[SHAPE] Compiler Inspectation result");
         Log.debug("=============================");
         Log.benchStart("Total time spent");
 
         // Perform lexing!
         Log.benchStart("Lexing");
-        Lexer lexer = new Lexer(source);
+        Lexer lexer = new Lexer(new FileReader(source));
         TokenStream tokens = lexer.perform();
         Log.benchEnd("Lexing");
 

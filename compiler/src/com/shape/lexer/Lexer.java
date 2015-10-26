@@ -12,8 +12,7 @@ import java.util.Stack;
  * Lexically analyses the code, and tokenizes, and returns tokenized code.
  */
 public class Lexer {
-    private File sourceFile;
-    private String document;
+    private Reader docReader;
     private TokenStream code = new TokenStream();
     private TokenType currentlyParsing;
     private boolean expectingNext = false;
@@ -22,24 +21,17 @@ public class Lexer {
     private int lineNo = 0, colNo = 0;
 
 
-    public Lexer(File sourceFile) {
-        this.sourceFile = sourceFile;
-    }
-
-    public Lexer(String document) {
-        this.document = document;
+    public Lexer(Reader reader) {
+        this.docReader = reader;
     }
 
     /**
      * Perform lexical analysis.
-     *
      * @return tokenized code
      */
     public TokenStream perform() throws ShapeError {
-
         try {
-            BufferedReader reader = new BufferedReader(document != null ?
-                    new StringReader(document) : new FileReader(sourceFile));
+            BufferedReader reader = new BufferedReader(docReader);
 
             String line;
             while ((line = reader.readLine()) != null) analyze(line);
@@ -51,9 +43,6 @@ public class Lexer {
             if (blockStack.size() != 0) {
                 throw new SyntaxError("'" + blockStack.pop() + "' expected : bracket is not closed.", lineNo, colNo);
             }
-
-        } catch (FileNotFoundException e) {
-            throw new ShapeError("File not found.");
 
         } catch (IOException e) {
             throw new ShapeError("An error occured during reading file. (%s)", e.getMessage());
