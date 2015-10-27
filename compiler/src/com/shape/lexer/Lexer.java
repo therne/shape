@@ -12,7 +12,7 @@ import java.util.Stack;
  * Lexically analyses the code, and tokenizes, and returns tokenized code.
  */
 public class Lexer {
-    private Reader docReader;
+    private InputStream stream;
     private TokenStream code = new TokenStream();
     private TokenType currentlyParsing;
     private boolean expectingNext = false;
@@ -21,8 +21,8 @@ public class Lexer {
     private int lineNo = 0, colNo = 0;
 
 
-    public Lexer(Reader reader) {
-        this.docReader = reader;
+    public Lexer(InputStream stream) {
+        this.stream = stream;
     }
 
     /**
@@ -31,7 +31,7 @@ public class Lexer {
      */
     public TokenStream perform() throws ShapeError {
         try {
-            BufferedReader reader = new BufferedReader(docReader);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
             String line;
             while ((line = reader.readLine()) != null) analyze(line);

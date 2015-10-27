@@ -9,6 +9,7 @@ import com.shape.parser.ModifyProcessor;
 import com.shape.parser.Parser;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class Main {
 
         // Perform lexing!
         Log.benchStart("Lexing");
-        Lexer lexer = new Lexer(new FileReader(source));
+        Lexer lexer = new Lexer(new FileInputStream(source));
         TokenStream tokens = lexer.perform();
         Log.benchEnd("Lexing");
 
@@ -98,5 +99,8 @@ public class Main {
         Log.benchEnd("Total time spent");
         Log.debug("===============================\n");
         System.out.println(doc);
+
+        ShapeCompiler compiler = new ShapeCompiler("a.xml", doc);
+        System.out.println(compiler.compileToShape());
     }
 }

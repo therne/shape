@@ -30,7 +30,7 @@ public class XmlConverter {
         // attributes
         doc.indent();
         for (Attribute attr : view.getAttributes()) {
-            doc.append(attr.toString() + "\n");
+            doc.append(attr + "\n");
         }
 
         // children

@@ -252,7 +252,7 @@ public class AndroidDictionary {
 
     private static void addParam(String origName, String shpName) {
         SHP_TO_XML_PARAMS.put(shpName, origName);
-        XML_TO_SHP_ATTRS.put(origName, shpName);
+        XML_TO_SHP_PARAMS.put(origName, shpName);
     }
 
     private static void addParam(String origName) {

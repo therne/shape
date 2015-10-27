@@ -1,14 +1,16 @@
 package com.shape
 
 import com.shape.ast.Source
+import com.shape.ast.SyntaxTree
+import com.shape.converter.ShapeConverter
 import com.shape.converter.XmlConverter
 import com.shape.lexer.Lexer
 import com.shape.parser.ModifyProcessor
 import com.shape.parser.Parser
-import java.io.File
-import java.io.FileReader
-import java.io.Reader
-import java.io.StringReader
+import com.shape.parser.XmlParser
+import org.w3c.dom.Document
+import java.io.*
+import kotlin.dom.*
 
 /**
  * ShapeCompiler
@@ -19,32 +21,41 @@ import java.io.StringReader
  */
 class ShapeCompiler {
     val fileName: String
-    val docReader: Reader
+    val stream: InputStream
     val parser = Parser()
 
     constructor(file: File) {
         this.fileName = file.name
-        this.docReader = FileReader(file)
+        this.stream = FileInputStream(file)
     }
 
     constructor(fileName: String, document: String) {
         this.fileName = fileName
-        this.docReader = StringReader(document)
+        this.stream = document.byteInputStream()
     }
 
     /**
      * Parses Shape code and generates {@link Source} and AST.
      * @return Source with AST {@link SyntaxTree}
      */
-    fun parse() : Source = parser.parse(fileName, Lexer(docReader).perform())
+    fun parse() : Source = parser.parse(fileName, Lexer(stream).perform())
 
     /**
      * Trans-compiles Shape code(.shp) into XML codes.
      * @return Shape document {String}
      */
     fun compileToXml() : String {
-        val src: Source = parse()
+        val src = parse()
         ModifyProcessor.modify(src.ast)
         return XmlConverter().performConvert(src.ast)
+    }
+
+    /**
+     * Trans-compiles XML code into Shape codes.
+     * @return XML document {String}
+     */
+    fun compileToShape() : String {
+        val src = XmlParser(stream).parse()
+        return ShapeConverter().performConvert(src)
     }
 }
