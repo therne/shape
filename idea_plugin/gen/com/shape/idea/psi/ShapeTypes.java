@@ -12,6 +12,7 @@ public interface ShapeTypes {
   IElementType ATTRIBUTE = new ShapeElementType("ATTRIBUTE");
   IElementType ATTRIBUTE_BLOCK = new ShapeElementType("ATTRIBUTE_BLOCK");
   IElementType ATTRIBUTE_PAIR = new ShapeElementType("ATTRIBUTE_PAIR");
+  IElementType ATTR_DIMENSION = new ShapeElementType("ATTR_DIMENSION");
   IElementType ATTR_IDENT_VALUE = new ShapeElementType("ATTR_IDENT_VALUE");
   IElementType ATTR_KEY = new ShapeElementType("ATTR_KEY");
   IElementType ATTR_STR_VALUE = new ShapeElementType("ATTR_STR_VALUE");
@@ -24,6 +25,7 @@ public interface ShapeTypes {
   IElementType DO_STATEMENT = new ShapeElementType("DO_STATEMENT");
   IElementType EXPRESSION = new ShapeElementType("EXPRESSION");
   IElementType FOR_STATEMENT = new ShapeElementType("FOR_STATEMENT");
+  IElementType FOUR_DIRECTION_ATTR = new ShapeElementType("FOUR_DIRECTION_ATTR");
   IElementType ID_DEFINITION = new ShapeElementType("ID_DEFINITION");
   IElementType IF_STATEMENT = new ShapeElementType("IF_STATEMENT");
   IElementType IMPORT_STATEMENT = new ShapeElementType("IMPORT_STATEMENT");
@@ -61,6 +63,7 @@ public interface ShapeTypes {
   IElementType VIEW_RECOVER = new ShapeElementType("VIEW_RECOVER");
   IElementType WHILE_STATEMENT = new ShapeElementType("WHILE_STATEMENT");
 
+  IElementType AS = new ShapeTokenType("as");
   IElementType ASSIGN = new ShapeTokenType("=");
   IElementType AT = new ShapeTokenType("@");
   IElementType BIT_AND = new ShapeTokenType("&");
@@ -172,6 +175,9 @@ public interface ShapeTypes {
       else if (type == ATTRIBUTE_PAIR) {
         return new ShapeAttributePairImpl(node);
       }
+      else if (type == ATTR_DIMENSION) {
+        return new ShapeAttrDimensionImpl(node);
+      }
       else if (type == ATTR_IDENT_VALUE) {
         return new ShapeAttrIdentValueImpl(node);
       }
@@ -207,6 +213,9 @@ public interface ShapeTypes {
       }
       else if (type == FOR_STATEMENT) {
         return new ShapeForStatementImpl(node);
+      }
+      else if (type == FOUR_DIRECTION_ATTR) {
+        return new ShapeFourDirectionAttrImpl(node);
       }
       else if (type == ID_DEFINITION) {
         return new ShapeIdDefinitionImpl(node);

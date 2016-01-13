@@ -48,6 +48,12 @@ public class ShapeAttrValueImpl extends ASTWrapperPsiElement implements ShapeAtt
 
   @Override
   @Nullable
+  public ShapeFourDirectionAttr getFourDirectionAttr() {
+    return findChildByClass(ShapeFourDirectionAttr.class);
+  }
+
+  @Override
+  @Nullable
   public ShapeResourceReference getResourceReference() {
     return findChildByClass(ShapeResourceReference.class);
   }

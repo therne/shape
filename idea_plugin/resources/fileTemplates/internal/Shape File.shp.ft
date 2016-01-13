@@ -1,0 +1,4 @@
+
+${CLASS_NAME} (${ADDITIONAL_ATTR}width: match, height: match) {
+    Text (text: "Hello world!")
+}

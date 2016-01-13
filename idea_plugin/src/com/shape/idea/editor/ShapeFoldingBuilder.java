@@ -9,6 +9,8 @@ import com.shape.idea.psi.ShapeFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+
 /**
  * Copyright (C) 2015 Therne. All rights are reserved.
  *

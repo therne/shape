@@ -10,8 +10,13 @@ import com.intellij.codeInsight.lookup.LookupElement;
  */
 public class ShapeCompletionContributor extends CompletionContributor {
     public ShapeCompletionContributor() {
-        extend(CompletionType.BASIC, AttrKeyCompleter.pattern(), new AttrKeyCompleter());
-        extend(CompletionType.BASIC, ViewNameCompleter.pattern(), new ViewNameCompleter());
-        extend(CompletionType.BASIC, KeywordCompleter.pattern(), new KeywordCompleter());
+        add(new KeywordCompleter());
+        add(new ViewNameCompleter());
+        add(new AttrKeyCompleter());
+        add(new AttrValueCompleter());
+    }
+
+    private void add(BaseCompletionProvider provider) {
+        extend(CompletionType.BASIC, provider.pattern(), provider);
     }
 }

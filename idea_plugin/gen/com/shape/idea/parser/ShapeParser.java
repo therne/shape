@@ -26,6 +26,9 @@ public class ShapeParser implements PsiParser, LightPsiParser {
     if (t == ASSIGN_STATEMENT) {
       r = AssignStatement(b, 0);
     }
+    else if (t == ATTR_DIMENSION) {
+      r = AttrDimension(b, 0);
+    }
     else if (t == ATTR_IDENT_VALUE) {
       r = AttrIdentValue(b, 0);
     }
@@ -70,6 +73,9 @@ public class ShapeParser implements PsiParser, LightPsiParser {
     }
     else if (t == FOR_STATEMENT) {
       r = ForStatement(b, 0);
+    }
+    else if (t == FOUR_DIRECTION_ATTR) {
+      r = FourDirectionAttr(b, 0);
     }
     else if (t == ID_DEFINITION) {
       r = IdDefinition(b, 0);
@@ -209,6 +215,20 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // Dimension | ResourceReference | integer | floati
+  public static boolean AttrDimension(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AttrDimension")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, "<attr dimension>");
+    r = Dimension(b, l + 1);
+    if (!r) r = ResourceReference(b, l + 1);
+    if (!r) r = consumeToken(b, INTEGER);
+    if (!r) r = consumeToken(b, FLOATI);
+    exit_section_(b, l, m, ATTR_DIMENSION, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // identifier
   public static boolean AttrIdentValue(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AttrIdentValue")) return false;
@@ -267,12 +287,20 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Dimension | ResourceReference | ColorCode | AttrStrValue | AttrIdentValue | integer | floati
+  // FourDirectionAttr
+  //     | Dimension
+  //     | ResourceReference
+  //     | ColorCode
+  //     | AttrStrValue
+  //     | AttrIdentValue
+  //     | integer
+  //     | floati
   public static boolean AttrValue(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "AttrValue")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, "<attr value>");
-    r = Dimension(b, l + 1);
+    r = FourDirectionAttr(b, l + 1);
+    if (!r) r = Dimension(b, l + 1);
     if (!r) r = ResourceReference(b, l + 1);
     if (!r) r = ColorCode(b, l + 1);
     if (!r) r = AttrStrValue(b, l + 1);
@@ -685,6 +713,20 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // AttrDimension AttrDimension AttrDimension AttrDimension
+  public static boolean FourDirectionAttr(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FourDirectionAttr")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, "<four direction attr>");
+    r = AttrDimension(b, l + 1);
+    r = r && AttrDimension(b, l + 1);
+    r = r && AttrDimension(b, l + 1);
+    r = r && AttrDimension(b, l + 1);
+    exit_section_(b, l, m, FOUR_DIRECTION_ATTR, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // view_id_name
   public static boolean IdDefinition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "IdDefinition")) return false;
@@ -732,7 +774,7 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // import static? ClassName ['.' '*']
+  // import static? ClassName ['.' '*'] as identifier
   public static boolean ImportStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ImportStatement")) return false;
     if (!nextTokenIs(b, IMPORT)) return false;
@@ -742,7 +784,8 @@ public class ShapeParser implements PsiParser, LightPsiParser {
     p = r; // pin = 1
     r = r && report_error_(b, ImportStatement_1(b, l + 1));
     r = p && report_error_(b, ClassName(b, l + 1)) && r;
-    r = p && ImportStatement_3(b, l + 1) && r;
+    r = p && report_error_(b, ImportStatement_3(b, l + 1)) && r;
+    r = p && report_error_(b, consumeTokens(b, -1, AS, IDENTIFIER)) && r;
     exit_section_(b, l, m, IMPORT_STATEMENT, r, p, null);
     return r || p;
   }
@@ -990,14 +1033,15 @@ public class ShapeParser implements PsiParser, LightPsiParser {
   public static boolean ResourceReference(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ResourceReference")) return false;
     if (!nextTokenIs(b, AT)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, null);
     r = consumeToken(b, AT);
-    r = r && consumeToken(b, IDENTIFIER);
-    r = r && consumeToken(b, QUOTIENT);
-    r = r && consumeToken(b, IDENTIFIER);
-    exit_section_(b, m, RESOURCE_REFERENCE, r);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, consumeToken(b, IDENTIFIER));
+    r = p && report_error_(b, consumeToken(b, QUOTIENT)) && r;
+    r = p && consumeToken(b, IDENTIFIER) && r;
+    exit_section_(b, l, m, RESOURCE_REFERENCE, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */

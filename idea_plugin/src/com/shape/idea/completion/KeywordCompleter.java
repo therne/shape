@@ -19,7 +19,7 @@ import java.util.ArrayList;
  *
  * @author Vista
  */
-public class KeywordCompleter extends CompletionProvider<CompletionParameters> {
+public class KeywordCompleter extends BaseCompletionProvider {
 
     private static final InsertHandler<LookupElement> SPACE_INSERTER = new InsertHandler<LookupElement>() {
         @Override
@@ -37,9 +37,11 @@ public class KeywordCompleter extends CompletionProvider<CompletionParameters> {
         LOOKUP_LIST.add(LookupElementBuilder.create("use").withInsertHandler(SPACE_INSERTER));
         LOOKUP_LIST.add(LookupElementBuilder.create("style").withInsertHandler(SPACE_INSERTER));
         LOOKUP_LIST.add(LookupElementBuilder.create("mixin").withInsertHandler(SPACE_INSERTER));
+        LOOKUP_LIST.add(LookupElementBuilder.create("as").withInsertHandler(SPACE_INSERTER));
     }
 
-    static PsiElementPattern.Capture<PsiElement> pattern() {
+    @Override
+    PsiElementPattern.Capture<PsiElement> pattern() {
         return PlatformPatterns.psiElement()
                 .withElementType(ShapeTypes.IDENTIFIER)
                 .withParent(PsiFile.class);

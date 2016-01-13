@@ -24,6 +24,9 @@
   <depends>org.jetbrains.android</depends>
 
   <extensions defaultExtensionNs="com.intellij">
+
+    <internalFileTemplate name="Shape File" />
+
     <!-- Add your extensions here -->
     <fileTypeFactory implementation="com.shape.idea.ShapeFileTypeFactory" />
     <lang.parserDefinition language="Shape" implementationClass="com.shape.idea.parser.ShapeParserDefinition" />
@@ -33,6 +36,11 @@
     <lang.commenter language="Shape" implementationClass="com.shape.idea.editor.ShapeCommenter" />
     <lang.braceMatcher language="Shape" implementationClass="com.shape.idea.editor.ShapeBraceMatcher" />
     <annotator language="Shape" implementationClass="com.shape.idea.highlighting.ShapeSyntaxAnnotator" />
+    <annotator language="Shape" implementationClass="com.shape.idea.highlighting.ShapeAndroidColorAnnotator" />
+    <lang.smartEnterProcessor language="Shape" implementationClass="com.shape.idea.completion.ShapeSmartEnterProcessor" />
+    
+    <fileBasedIndex implementation="com.shape.idea.ShapeAndroidIdIndex" />
+
   </extensions>
 
   <application-components>
@@ -44,7 +52,10 @@
   </project-components>
 
   <actions>
-    <!-- Add your actions here -->
+    <action class="com.shape.idea.actions.ShapeCreateFileAction" id="Shape.NewShapeFile"
+            text="Layout File (Shape)" description="Create new layout file in shape">
+      <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile" />
+    </action>
   </actions>
 
 </idea-plugin>

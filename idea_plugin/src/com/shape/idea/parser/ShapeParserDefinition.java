@@ -34,7 +34,7 @@ public class ShapeParserDefinition implements com.intellij.lang.ParserDefinition
     public static final TokenSet NUMBERS = TokenSet.create(INTEGER, FLOATI, DECIMALI, FLOATI, HEX, OCT);
     public static final TokenSet KEYWORDS = TokenSet.create(BOOLEAN, BREAK, BYTE, CASE, CHAR,
             CONTINUE, DO, DOUBLE, ELSE, FINALLY, FLOAT, FOR, DEFAULT, IMPORT, USE, INSTANCEOF, INT,
-            LONG, NEW, IF, STYLE, SHORT, SWITCH, RETURN, WHILE);
+            LONG, NEW, IF, STYLE, SHORT, SWITCH, RETURN, WHILE, AS);
 
     public static final TokenSet OPERATORS = TokenSet.create(QUESTION_MARK,
             EQ, ASSIGN, NOT_EQ, NOT, PLUS_PLUS, PLUS_ASSIGN, PLUS, MINUS_MINUS, MINUS_ASSIGN, MINUS,

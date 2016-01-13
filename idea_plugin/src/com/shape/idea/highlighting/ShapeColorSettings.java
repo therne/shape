@@ -52,18 +52,15 @@ public class ShapeColorSettings implements ColorSettingsPage {
     @NotNull
     @Override
     public String getDemoText() {
-        return "# You are reading the \".properties\" entry.\n" +
-                "! The exclamation mark can also mark text as comments.\n" +
-                "website = http://en.wikipedia.org/\n" +
-                "language = English\n" +
-                "# The backslash below tells the application to continue reading\n" +
-                "# the value onto the next line.\n" +
-                "message = Welcome to \\\n" +
-                "          Wikipedia!\n" +
-                "# Add spaces to the key\n" +
-                "key\\ with\\ spaces = This is the value that could be looked up with the key \"key with spaces\".\n" +
-                "# Unicode\n" +
-                "tab : \\u0009";
+        return  "/**\n" +
+                " * This is a block comment!\n" +
+                " */\n" +
+                "import android.support.v4.view.ViewPager\n" +
+                "Linear (vertical, width: match, padding: 16 24 16 24dp) {\n" +
+                "    // you can import view names\n" +
+                "    ViewPager #pager (width: 100%, height: match)\n" +
+                "    Button .bigButton #ok (width: match, text: \"Style test\")\n" +
+                "}\n";
     }
 
     @Nullable

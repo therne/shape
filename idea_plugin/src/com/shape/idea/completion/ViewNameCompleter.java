@@ -2,6 +2,7 @@ package com.shape.idea.completion;
 
 import com.android.tools.idea.rendering.AppResourceRepository;
 import com.android.tools.idea.rendering.DynamicResourceValueItem;
+import com.google.common.base.Enums;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
@@ -21,12 +22,18 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.*;
 import com.intellij.util.indexing.FileBasedIndex;
+import com.intellij.util.xml.ResolvingConverter;
+import com.intellij.util.xml.impl.ConvertContextFactory;
 import com.shape.dictionary.AndroidDictionary;
 import com.shape.idea.psi.ShapeTypes;
 import com.shape.idea.psi.ShapeViewName;
 import org.jetbrains.android.AndroidIdIndex;
 import org.jetbrains.android.augment.ResourceTypeClassBase;
 import org.jetbrains.android.dom.AndroidDomElementDescriptorProvider;
+import org.jetbrains.android.dom.AndroidDomUtil;
+import org.jetbrains.android.dom.attrs.AttributeDefinition;
+import org.jetbrains.android.dom.attrs.AttributeDefinitions;
+import org.jetbrains.android.dom.attrs.AttributeFormat;
 import org.jetbrains.android.dom.converters.ResourceReferenceConverter;
 import org.jetbrains.android.dom.layout.AndroidLayoutUtil;
 import org.jetbrains.android.facet.AndroidFacet;
@@ -44,9 +51,10 @@ import java.util.HashMap;
  *
  * @author Vista
  */
-public class ViewNameCompleter extends CompletionProvider<CompletionParameters> {
+public class ViewNameCompleter extends BaseCompletionProvider {
 
-    static PsiElementPattern.Capture<PsiElement> pattern() {
+    @Override
+    PsiElementPattern.Capture<PsiElement> pattern() {
         return PlatformPatterns.psiElement()
                 .withElementType(ShapeTypes.IDENTIFIER)
                 .withSuperParent(3, ShapeViewName.class);
@@ -78,36 +86,5 @@ public class ViewNameCompleter extends CompletionProvider<CompletionParameters> 
             }
             resultSet.addElement(builder);
         }
-
-//        Project myProject = facet.getModule().getProject();
-//        final List<XmlAttributeValue> declarations = new ArrayList<>();
-//        final Collection<VirtualFile> files =
-//                FileBasedIndex.getInstance().getContainingFiles(AndroidIdIndex.INDEX_ID, "+hello", GlobalSearchScope.allScope(myProject));
-//        final Set<VirtualFile> fileSet = new com.intellij.util.containers.HashSet<VirtualFile>(files);
-//        final PsiManager psiManager = PsiManager.getInstance(myProject);
-//
-//        System.err.println(files.size());
-
-//        ResourceManager manager = facet.getResourceManager(null);
-//        for (VirtualFile subdir : manager.getResourceSubdirsToSearchIds()) {
-//            for (VirtualFile file : subdir.getChildren()) {
-//                if (fileSet.contains(file)) {
-//                    final PsiFile psiFile = psiManager.findFile(file);
-//                    System.err.println(file.getPath());
-//                }
-//            }
-//        }
-
-//        final GlobalSearchScope scope = GlobalSearchScope.allScope(myProject);
-//        final FileBasedIndex index = FileBasedIndex.getInstance();
-//
-//        index.processValues(AndroidIdIndex.INDEX_ID, AndroidIdIndex.MARKER, null, new FileBasedIndex.ValueProcessor<Set<String>>() {
-//            @Override
-//            public boolean process(VirtualFile file, Set<String> value) {
-//                System.err.println(file.getPath());
-//                System.err.println(value.toString());
-//                return true;
-//            }
-//        }, scope);
     }
 }

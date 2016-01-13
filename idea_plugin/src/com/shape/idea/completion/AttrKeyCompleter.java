@@ -8,30 +8,28 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.ProcessingContext;
+import com.shape.dictionary.AndroidDictionary;
 import com.shape.idea.psi.ShapeAttrKey;
+import com.shape.idea.psi.ShapeAttrValue;
 import com.shape.idea.psi.ShapeTypes;
+import org.jetbrains.android.dom.attrs.AttributeDefinitions;
+import org.jetbrains.android.facet.AndroidFacet;
+import org.jetbrains.android.resourceManagers.ResourceManager;
 import org.jetbrains.annotations.NotNull;
+
+import static org.jetbrains.android.util.AndroidUtils.SYSTEM_RESOURCE_PACKAGE;
 
 /**
  * Copyright (C) 2015 Therne. All rights are reserved.
  *
  * @author Vista
  */
-public class AttrKeyCompleter extends CompletionProvider<CompletionParameters> {
-
-    private static final String[] KEYS = new String[] {
-            "width", "height", "margin", "marginStart", "marginEnd", "marginLeft", "marginRight", "marginTop", "marginBottom",
-            "padding", "paddingTop", "paddingRight", "paddingBottom", "paddingLeft",
-            "visible", "touchable", "focusable", "invisible", "gone", "top", "left", "right",
-            "orientation", "centerInParent", "toRightOf", "toLeftOf", "above", "below", "alignBaseline",
-            "background", "textColor", "hintText", "hintColor", "flex"
-    };
-
-    static PsiElementPattern.Capture<PsiElement> pattern() {
-        return PlatformPatterns.psiElement()
-                .withElementType(ShapeTypes.IDENTIFIER)
-                .withParent(ShapeAttrKey.class);
+public class AttrKeyCompleter extends BaseCompletionProvider {
+    @Override
+    PsiElementPattern pattern() {
+        return PlatformPatterns.psiElement().withParent(ShapeAttrKey.class).withElementType(ShapeTypes.IDENTIFIER);
     }
 
     @Override
@@ -39,8 +37,17 @@ public class AttrKeyCompleter extends CompletionProvider<CompletionParameters> {
                                   ProcessingContext processingContext,
                                   @NotNull CompletionResultSet resultSet) {
 
-        for (String key : KEYS) {
-            resultSet.addElement(LookupElementBuilder.create(key)
+        AndroidFacet facet = AndroidFacet.getInstance(completionParameters.getPosition());
+        if (facet == null) return;
+        ResourceManager resourceManager = facet.getResourceManager(SYSTEM_RESOURCE_PACKAGE);
+        if (resourceManager == null) return;
+
+        // load attribute autocompletion information
+        AttributeDefinitions attrDefs = resourceManager.getAttributeDefinitions();
+        if (attrDefs == null) return;
+
+        for (String key : attrDefs.getAttributeNames()) {
+            resultSet.addElement(LookupElementBuilder.create(AndroidDictionary.shapeAttrName(key))
                     .withInsertHandler(new InsertHandler<LookupElement>() {
                         @Override
                         public void handleInsert(InsertionContext context, LookupElement item) {

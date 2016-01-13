@@ -11,6 +11,10 @@ public class ShapeVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitAttrDimension(@NotNull ShapeAttrDimension o) {
+    visitPsiElement(o);
+  }
+
   public void visitAttrIdentValue(@NotNull ShapeAttrIdentValue o) {
     visitPsiElement(o);
   }
@@ -68,6 +72,10 @@ public class ShapeVisitor extends PsiElementVisitor {
   }
 
   public void visitForStatement(@NotNull ShapeForStatement o) {
+    visitPsiElement(o);
+  }
+
+  public void visitFourDirectionAttr(@NotNull ShapeFourDirectionAttr o) {
     visitPsiElement(o);
   }
 

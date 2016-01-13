@@ -90,7 +90,7 @@ private OneOfStatements ::=
 
 private TopLevelStatementsRecover ::= !( import | ';' | use | style | identifier )
 
-ImportStatement ::= import static? ClassName ['.' '*'] { pin=1 }
+ImportStatement ::= import static? ClassName ['.' '*'] as identifier { pin=1 }
 PackageName ::= identifier dot_head_name* { pin=1 }
 ClassName ::= PackageName
 
@@ -98,12 +98,22 @@ UseStatement ::= use (VariableDeclaration | UseBlock)  {pin(".*")=1}
 UseBlock ::= '{' ('}' | VariableDeclarations  '}')
 
 // Resources
-ResourceReference ::= '@' identifier '/' identifier
+ResourceReference ::= '@' identifier '/' identifier { pin=1 }
 Dimension ::= (integer | floati) (dp | sp | px | '%')
 ColorCode ::= view_id_name // #identifier
 AttrIdentValue ::= identifier
 AttrStrValue ::= str
-AttrValue ::= Dimension | ResourceReference | ColorCode | AttrStrValue | AttrIdentValue | integer | floati
+AttrDimension ::= Dimension | ResourceReference | integer | floati
+
+FourDirectionAttr ::= AttrDimension AttrDimension AttrDimension AttrDimension
+AttrValue ::= FourDirectionAttr
+    | Dimension
+    | ResourceReference
+    | ColorCode
+    | AttrStrValue
+    | AttrIdentValue
+    | integer
+    | floati
 
 // Styles
 StyleStatement ::= style identifier ['(' Selector ')'] AttributeBlock { pin=2 }

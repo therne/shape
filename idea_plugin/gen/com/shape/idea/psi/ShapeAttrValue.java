@@ -20,6 +20,9 @@ public interface ShapeAttrValue extends PsiElement {
   ShapeDimension getDimension();
 
   @Nullable
+  ShapeFourDirectionAttr getFourDirectionAttr();
+
+  @Nullable
   ShapeResourceReference getResourceReference();
 
 }

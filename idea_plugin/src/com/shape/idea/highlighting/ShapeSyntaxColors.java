@@ -64,6 +64,7 @@ public abstract class ShapeSyntaxColors  {
     }
 
     public static TextAttributesKey[] getAttr(IElementType elem) {
-        return ATTR_MAP.getOrDefault(elem, EMPTY_KEYS);
+        TextAttributesKey[] attr = ATTR_MAP.get(elem);
+        return attr != null ? attr : EMPTY_KEYS;
     }
 }
